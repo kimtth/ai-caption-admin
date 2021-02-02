@@ -1,4 +1,4 @@
-import { Box, Card, Checkbox, makeStyles, Table, TableBody, TableCell, TableHead, TablePagination, TableRow, Typography } from '@material-ui/core';
+import { Box, Card, Checkbox, makeStyles, Table, TableBody, TableCell, TableHead, TablePagination, TableRow } from '@material-ui/core';
 import clsx from 'clsx';
 import moment from 'moment';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 const Results = ({ className, customers, ...rest }) => {
   const classes = useStyles();
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
-  const [limit, setLimit] = useState(25);
+  const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
@@ -82,7 +82,7 @@ const Results = ({ className, customers, ...rest }) => {
                 <TableCell>
                   Channel Name
                 </TableCell>
-                <TableCell width="5%">
+                <TableCell>
                   User Id
                 </TableCell>
                 <TableCell>
@@ -92,7 +92,7 @@ const Results = ({ className, customers, ...rest }) => {
                   Translate
                 </TableCell>
                 <TableCell>
-                  AudioRecord
+                  Audio Record
                 </TableCell>
                 <TableCell>
                   Published
@@ -114,19 +114,9 @@ const Results = ({ className, customers, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {customer.name}
-                      </Typography>
-                    </Box>
+                    {customer.name}
                   </TableCell>
-                  <TableCell width="20px">
+                  <TableCell style={{ maxWidth: '110px', overflowWrap: 'break-word' }}>
                     {customer.email}
                   </TableCell>
                   <TableCell>
@@ -154,7 +144,7 @@ const Results = ({ className, customers, ...rest }) => {
         onChangeRowsPerPage={handleLimitChange}
         page={page}
         rowsPerPage={limit}
-        rowsPerPageOptions={[25, 50, 100]}
+        rowsPerPageOptions={[100, 300, 500]}
       />
     </Card>
   );

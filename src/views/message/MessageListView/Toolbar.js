@@ -40,7 +40,7 @@ const Toolbar = ({ className, ...rest }) => {
       <Box mt={3}>
         <Card>
           <CardContent style={{ padding: 5 }}>
-            <Box maxWidth={800}>
+            <Box maxWidth="98%">
               <TextField
                 fullWidth
                 InputProps={{
