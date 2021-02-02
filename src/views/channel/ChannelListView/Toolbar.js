@@ -1,26 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  TextField,
-  InputAdornment,
-  SvgIcon,
-  makeStyles
-} from '@material-ui/core';
+import { Box, Button, Card, CardContent, TextField, InputAdornment, SvgIcon, makeStyles } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
-  importButton: {
+  basicButton: {
     marginRight: theme.spacing(1)
   },
-  exportButton: {
-    marginRight: theme.spacing(1)
-  }
 }));
 
 const Toolbar = ({ className, ...rest }) => {
@@ -35,23 +23,24 @@ const Toolbar = ({ className, ...rest }) => {
         display="flex"
         justifyContent="flex-end"
       >
-        <Button className={classes.importButton}>
-          Import
-        </Button>
-        <Button className={classes.exportButton}>
-          Export
+        <Button
+          color="primary"
+          variant="contained"
+          className={classes.basicButton}
+        >
+          Delete
         </Button>
         <Button
           color="primary"
           variant="contained"
         >
-          Add customer
+          Edit
         </Button>
       </Box>
       <Box mt={3}>
         <Card>
-          <CardContent>
-            <Box maxWidth={500}>
+          <CardContent style={{ padding: 5 }}>
+            <Box maxWidth={800}>
               <TextField
                 fullWidth
                 InputProps={{
@@ -66,7 +55,7 @@ const Toolbar = ({ className, ...rest }) => {
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search customer"
+                placeholder="Search channel"
                 variant="outlined"
               />
             </Box>

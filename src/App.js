@@ -8,7 +8,9 @@ import theme from 'src/theme';
 import routes from 'src/routes';
 
 const App = () => {
-  const routing = useRoutes(routes);
+  //const { isLoggedIn } = React.useSelector((state) => state.auth);
+  const isLoggedIn = true;
+  const routing = useRoutes(routes(isLoggedIn));
 
   return (
     <ThemeProvider theme={theme}>

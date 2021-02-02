@@ -2,24 +2,25 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import MainLayout from 'src/layouts/MainLayout';
-// import AccountView from 'src/views/account/AccountView';
-import CustomerListView from 'src/views/customer/CustomerListView';
-import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
+import UserListView from 'src/views/user/UserListView';
+import ChannelListView from 'src/views/channel/ChannelListView';
+import MessageListView from 'src/views/message/MessageListView';
+import SpeechListView from 'src/views/custom_speech/SpeechListView';
 import NotFoundView from 'src/views/errors/NotFoundView';
-// import ProductListView from 'src/views/product/ProductListView';
-import RegisterView from 'src/views/auth/RegisterView';
+import DashboardView from 'src/views/reports/DashboardView';
 import SettingsView from 'src/views/settings/SettingsView';
 
-const routes = [
+const routes = (isLoggedIn) => [
   {
     path: 'app',
-    element: <DashboardLayout />,
+    element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
-      // { path: 'account', element: <AccountView /> },
-      { path: 'customers', element: <CustomerListView /> },
+      { path: 'user', element: <UserListView /> },
+      { path: 'channel', element: <ChannelListView /> },
+      { path: 'message', element: <MessageListView /> },
+      { path: 'speech', element: <SpeechListView /> },
       { path: 'dashboard', element: <DashboardView /> },
-      // { path: 'products', element: <ProductListView /> },
       { path: 'settings', element: <SettingsView /> },
       { path: '*', element: <Navigate to="/404" /> }
     ]
@@ -28,8 +29,7 @@ const routes = [
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: <LoginView /> },
-      { path: 'register', element: <RegisterView /> },
+      { path: 'login', element: isLoggedIn ? <Navigate to="/" /> : <LoginView /> },
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <Navigate to="/app/dashboard" /> },
       { path: '*', element: <Navigate to="/404" /> }
