@@ -1,0 +1,36 @@
+type Channel {
+    id: ID!
+    name: String
+    userId: String
+    owner: Boolean
+    publishedDate: String
+}
+
+type Message {
+    id: ID!
+    channelId: String
+    userId: String
+    conversationText: String
+    translateText: String
+    timestamp: String
+    metadata: String
+    isAudioRecord: Boolean
+    publishedDate: String
+}
+
+type User {
+    userId: ID!
+    username: String
+    password: String
+    publishedDate: String
+}
+
+type Query {
+    hello: String
+    channels: [Channel]
+    messages: [Message]
+    users: [User]
+    channel(id: ID!): Channel
+    message(id: ID!): Message
+    user(userId: ID!): User
+}

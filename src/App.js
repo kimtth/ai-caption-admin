@@ -6,6 +6,8 @@ import GlobalStyles from 'src/components/GlobalStyles';
 import 'src/mixins/chartjs';
 import theme from 'src/theme';
 import routes from 'src/routes';
+import { ApolloProvider } from '@apollo/client';
+import client from './api/apollo-client';
 
 const App = () => {
   //const { isLoggedIn } = React.useSelector((state) => state.auth);
@@ -13,10 +15,12 @@ const App = () => {
   const routing = useRoutes(routes(isLoggedIn));
 
   return (
-    <ThemeProvider theme={theme}>
-      <GlobalStyles />
-      {routing}
-    </ThemeProvider>
+    <ApolloProvider client={client}>
+      <ThemeProvider theme={theme}>
+        <GlobalStyles />
+        {routing}
+      </ThemeProvider>
+    </ApolloProvider>
   );
 };
 

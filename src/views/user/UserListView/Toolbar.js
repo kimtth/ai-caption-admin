@@ -28,6 +28,13 @@ const Toolbar = ({ className, ...rest }) => {
           variant="contained"
           className={classes.basicButton}
         >
+          Add
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          className={classes.basicButton}
+        >
           Delete
         </Button>
         <Button

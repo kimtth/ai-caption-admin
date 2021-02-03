@@ -40,7 +40,8 @@
     "react/require-default-props": "off",
     "linebreak-style": ["error", "windows"],
     "spaced-comment": "off",
-    "object-curly-newline": "off"
+    "object-curly-newline": "off",
+    "react/prop-types": "off"
   }
 
 }
