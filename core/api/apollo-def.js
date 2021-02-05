@@ -14,7 +14,7 @@ const resolvers = {
     hello: () => 'Hello world!',
     user: (parent, args, context, info) => {
       // The query from a client
-      // query UserQuery {
+      // query UserOneQuery {
       //   user(userId: "test@test"){
       //     userId
       //     username
@@ -35,7 +35,7 @@ const resolvers = {
       return User.find();
     },
     channel: (parent, args, context, info) => {
-      //  query ChannelQuery {
+      //  query ChannelOneQuery {
       //     channel(id: "8455d4-02c2-1cf6-a07f-6cde1373b6da") {
       //        id
       //        name
@@ -75,7 +75,7 @@ const resolvers = {
       return Message.findOne({ id: args.id });
     },
     messages: () => {
-      // query MessageQuery {
+      // query MessageOneQuery {
       //   message(id: "cf74485-aef-16f2-5ed3-fcee3586b5e") {
       //       id
       //       channelId

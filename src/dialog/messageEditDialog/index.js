@@ -1,0 +1,152 @@
+import { DialogTitle, Grid, Typography } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import TextField from '@material-ui/core/TextField';
+import React from 'react';
+
+const MessageEditDialog = (props) => {
+  const { open, setOpen, selectedMessageIds } = props;
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleEdit = () => {
+    selectedMessageIds.map((messageId) => console.log(messageId));
+    setOpen(false);
+  };
+
+  return (
+    <div>
+      <Dialog open={open} onClose={handleClose} fullWidth aria-labelledby="form-dialog-title">
+        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+          <Typography id="form-dialog-title" variant="h3" component="span">Edit Message</Typography>
+        </DialogTitle>
+        <DialogContent dividers>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <Typography variant="subtitle1">Channel ID: </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                margin="dense"
+                id="channelId"
+                label="Channel Id"
+                variant="outlined"
+                fullWidth
+                disabled
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <Typography variant="subtitle1">User ID: </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                margin="dense"
+                id="userId (e-mail)"
+                type="email"
+                label="e-mail"
+                variant="outlined"
+                fullWidth
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <Typography variant="subtitle1">Recognized: </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                autoFocus
+                margin="dense"
+                id="recognized"
+                label="Recognized"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={5}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <Typography variant="subtitle1">Translate: </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <TextField
+                margin="dense"
+                id="translate"
+                label="Translate"
+                variant="outlined"
+                fullWidth
+                multiline
+                rows={5}
+              />
+            </Grid>
+          </Grid>
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={3}>
+              <Typography variant="subtitle1">Audio Record: </Typography>
+            </Grid>
+            <Grid item xs={9}>
+              <FormControl component="audiorecord">
+                <RadioGroup row aria-label="position" name="position" defaultValue="true">
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio color="primary" />}
+                    label="Yes"
+                    labelPlacement="start"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio color="primary" />}
+                    label="No"
+                    labelPlacement="start"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </Grid>
+          </Grid>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleEdit} color="primary" variant="contained">
+            Save
+          </Button>
+          <Button onClick={handleClose} color="primary" variant="outlined">
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
+  );
+};
+
+export default MessageEditDialog;

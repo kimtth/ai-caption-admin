@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, users, ...rest }) => {
+const Results = ({ className, users, selectedUserIds, setSelectedUserIds, ...rest }) => {
   const classes = useStyles();
-  const [selectedUserIds, setSelectedUserIds] = useState([]);
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 
@@ -22,7 +21,7 @@ const Results = ({ className, users, ...rest }) => {
     let newSelectedUserIds;
 
     if (event.target.checked) {
-      newSelectedUserIds = users.map((user) => user.id);
+      newSelectedUserIds = users.map((user) => user.userId);
     } else {
       newSelectedUserIds = [];
     }
@@ -30,12 +29,12 @@ const Results = ({ className, users, ...rest }) => {
     setSelectedUserIds(newSelectedUserIds);
   };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedUserIds.indexOf(id);
+  const handleSelectOne = (event, userId) => {
+    const selectedIndex = selectedUserIds.indexOf(userId);
     let newSelectedUserIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedUserIds = newSelectedUserIds.concat(selectedUserIds, id);
+      newSelectedUserIds = newSelectedUserIds.concat(selectedUserIds, userId);
     } else if (selectedIndex === 0) {
       newSelectedUserIds = newSelectedUserIds.concat(selectedUserIds.slice(1));
     } else if (selectedIndex === selectedUserIds.length - 1) {

@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
 import { Box, Container, makeStyles } from '@material-ui/core';
+import React, { useState } from 'react';
+import { useQuery } from '@apollo/react-hooks';
 import Page from 'src/components/Page';
+import { channelsQuery } from '../../../api/graph-queries';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
+// import data from './data';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -16,7 +18,13 @@ const useStyles = makeStyles((theme) => ({
 
 const ChannelListView = () => {
   const classes = useStyles();
-  const [customers] = useState(data);
+  const { loading, error, data } = useQuery(channelsQuery);
+  const [selectedChannelIds, setSelectedChannelIds] = useState([]);
+
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
+
+  const channels = data ? data.channels : [];
 
   return (
     <Page
@@ -24,9 +32,15 @@ const ChannelListView = () => {
       title="Channels"
     >
       <Container maxWidth={false}>
-        <Toolbar />
+        <Toolbar
+          selectedChannelIds={selectedChannelIds}
+        />
         <Box mt={3}>
-          <Results customers={customers} />
+          <Results
+            channels={channels}
+            selectedChannelIds={selectedChannelIds}
+            setSelectedChannelIds={setSelectedChannelIds}
+          />
         </Box>
       </Container>
     </Page>

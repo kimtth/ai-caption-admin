@@ -12,42 +12,41 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers, ...rest }) => {
+const Results = ({ className, messages, selectedMessageIds, setSelectedMessageIds, ...rest }) => {
   const classes = useStyles();
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+    let newSelectedMessageIds;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newSelectedMessageIds = messages.map((message) => message.id);
     } else {
-      newSelectedCustomerIds = [];
+      newSelectedMessageIds = [];
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedMessageIds(newSelectedMessageIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+    const selectedIndex = selectedMessageIds.indexOf(id);
+    let newSelectedMessageIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
+      newSelectedMessageIds = newSelectedMessageIds.concat(selectedMessageIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
+      newSelectedMessageIds = newSelectedMessageIds.concat(selectedMessageIds.slice(1));
+    } else if (selectedIndex === selectedMessageIds.length - 1) {
+      newSelectedMessageIds = newSelectedMessageIds.concat(selectedMessageIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
+      newSelectedMessageIds = newSelectedMessageIds.concat(
+        selectedMessageIds.slice(0, selectedIndex),
+        selectedMessageIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedMessageIds(newSelectedMessageIds);
   };
 
   const handleLimitChange = (event) => {
@@ -70,17 +69,17 @@ const Results = ({ className, customers, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedMessageIds.length === messages.length}
                     color="primary"
                     indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      selectedMessageIds.length > 0
+                      && selectedMessageIds.length < messages.length
                     }
                     onChange={handleSelectAll}
                   />
                 </TableCell>
                 <TableCell>
-                  Channel Name
+                  Channel Id
                 </TableCell>
                 <TableCell>
                   User Id
@@ -100,36 +99,36 @@ const Results = ({ className, customers, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {messages.slice(0, limit).map((message) => (
                 <TableRow
                   hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                  key={message.id}
+                  selected={selectedMessageIds.indexOf(message.id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
+                      checked={selectedMessageIds.indexOf(message.id) !== -1}
+                      onChange={(event) => handleSelectOne(event, message.id)}
                       value="true"
                     />
                   </TableCell>
                   <TableCell>
-                    {customer.name}
+                    {message.channelId}
                   </TableCell>
                   <TableCell style={{ maxWidth: '110px', overflowWrap: 'break-word' }}>
-                    {customer.email}
+                    {message.userId}
                   </TableCell>
                   <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
+                    {message.conversationText}
                   </TableCell>
                   <TableCell>
-                    {customer.phone}
+                    {message.translateText}
                   </TableCell>
                   <TableCell>
-                    {customer.address.state}
+                    {message.isAudioRecord ? 'Yes' : 'No'}
                   </TableCell>
                   <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                    {moment(parseInt(message.publishedDate, 10)).format('YYYY/MM/DD HH:MM:SS')}
                   </TableCell>
                 </TableRow>
               ))}
@@ -139,7 +138,7 @@ const Results = ({ className, customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={messages.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -152,7 +151,7 @@ const Results = ({ className, customers, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  messages: PropTypes.array.isRequired
 };
 
 export default Results;

@@ -12,42 +12,41 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers, ...rest }) => {
+const Results = ({ className, channels, selectedChannelIds, setSelectedChannelIds, ...rest }) => {
   const classes = useStyles();
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+    let newSelectedChannelIds;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newSelectedChannelIds = channels.map((channel) => channel.id);
     } else {
-      newSelectedCustomerIds = [];
+      newSelectedChannelIds = [];
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedChannelIds(newSelectedChannelIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+    const selectedIndex = selectedChannelIds.indexOf(id);
+    let newSelectedChannelIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
+      newSelectedChannelIds = newSelectedChannelIds.concat(selectedChannelIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
+      newSelectedChannelIds = newSelectedChannelIds.concat(selectedChannelIds.slice(1));
+    } else if (selectedIndex === selectedChannelIds.length - 1) {
+      newSelectedChannelIds = newSelectedChannelIds.concat(selectedChannelIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
+      newSelectedChannelIds = newSelectedChannelIds.concat(
+        selectedChannelIds.slice(0, selectedIndex),
+        selectedChannelIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedChannelIds(newSelectedChannelIds);
   };
 
   const handleLimitChange = (event) => {
@@ -70,14 +69,17 @@ const Results = ({ className, customers, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedChannelIds.length === channels.length}
                     color="primary"
                     indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      selectedChannelIds.length > 0
+                      && selectedChannelIds.length < channels.length
                     }
                     onChange={handleSelectAll}
                   />
+                </TableCell>
+                <TableCell>
+                  Channel Id
                 </TableCell>
                 <TableCell>
                   Channel Name
@@ -94,30 +96,33 @@ const Results = ({ className, customers, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {channels.slice(0, limit).map((channel) => (
                 <TableRow
                   hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                  key={channel.id}
+                  selected={selectedChannelIds.indexOf(channel.id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
+                      checked={selectedChannelIds.indexOf(channel.id) !== -1}
+                      onChange={(event) => handleSelectOne(event, channel.id)}
                       value="true"
                     />
                   </TableCell>
                   <TableCell>
-                    {customer.name}
+                    {channel.id}
                   </TableCell>
                   <TableCell>
-                    {customer.email}
+                    {channel.name}
                   </TableCell>
                   <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
+                    {channel.userId}
                   </TableCell>
                   <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                    {channel.owner ? 'publisher' : 'subscriber'}
+                  </TableCell>
+                  <TableCell>
+                    {moment(parseInt(channel.publishedDate, 10)).format('YYYY/MM/DD HH:MM:SS')}
                   </TableCell>
                 </TableRow>
               ))}
@@ -127,7 +132,7 @@ const Results = ({ className, customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={channels.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -140,7 +145,7 @@ const Results = ({ className, customers, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  channels: PropTypes.array.isRequired
 };
 
 export default Results;
