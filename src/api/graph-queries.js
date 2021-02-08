@@ -31,6 +31,7 @@ export const messagesQuery = gql `
 export const channelsQuery = gql `
   query ChannelsQuery {
     channels {
+      _id
       id
       name
       userId
@@ -79,15 +80,98 @@ export const messageOneQuery = gql`
 `;
 
 export const userCreateQuery = gql`
-  mutation {
+  mutation UserCreateQuery($user: UserInput!) {
     createUser(
-      userId: "",
-      username: "",
-      password: ""
+      user: $user
     ){
+      id
       userId
       username
       password
+    }
+  }
+`;
+
+export const userUpdateQuery = gql`
+  mutation UserUpdateQuery($userId: ID!, $user: UserInput) {
+    updateUser(
+      userId: $userId,
+      user: $user
+    ){
+      id
+      userId
+      username
+      password
+    }
+  }
+`;
+
+export const channelUpdateQuery = gql`
+  mutation ChannelUpdateQuery($channelId: ID!, $channel: ChannelInput!){
+    updateChannel(
+      _id: $channelId,
+      channel: $channel
+    ){
+      id
+      name
+      userId
+      owner
+    }
+  }
+`;
+
+export const messageUpdateQuery = gql`
+  mutation MessageUpdateQuery($messageId: ID!, $message: MessageInput){
+    updateMessage(
+      id: $messageId,
+      message: $message
+    ){
+      id
+      channelId
+      userId
+      conversationText
+      translateText
+      timestamp
+      metadata
+      isAudioRecord
+    }
+  }
+`;
+
+export const userDeleteQuery = gql ` 
+  mutation UserDeleteQuery($ids: [ID]!) {
+    deleteUsers(ids: $ids){
+      userId
+      username
+      publishedDate
+    }
+  }
+`;
+
+export const channelDeleteQuery = gql `
+  mutation ChannelDeleteQuery($_ids: [ID]!) {
+    deleteChannels(_ids: $_ids) {
+      id
+      name
+      userId
+      owner
+      publishedDate
+    }
+  }
+`;
+
+export const messageDeleteQuery = gql`
+  mutation MessageDeleteQuery($ids: ID!) {
+    deleteMessages(ids: $ids) {
+      id
+      channelId
+      userId
+      conversationText
+      translateText
+      timestamp
+      metadata
+      isAudioRecord
+      publishedDate
     }
   }
 `;

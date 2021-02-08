@@ -11,86 +11,102 @@ const typeDefs = gql(fs.readFileSync(`${__dirname}/schema.graphql`, {
 // Provide resolver functions for your schema fields
 const resolvers = {
   Query: {
-    hello: () => 'Hello world!',
-    user: (parent, args, context, info) => {
-      // The query from a client
-      // query UserOneQuery {
-      //   user(userId: "test@test"){
-      //     userId
-      //     username
-      //     publishedDate
-      //   }
-      // }
-      return User.findOne({ userId: args.userId });
+    hello: async () => await 'Hello world!',
+    user: async (parent, args, context, info) => {
+      const { userId } = args;
+      const user = await User.findOne({ userId: userId });
+      if (user) {
+        return user
+      }
     },
-    users: () => {
-      // query UsersQuery {
-      //   users {
-      //     userId
-      //     username
-      //     password
-      //     publishedDate
-      //   }
-      // }
-      return User.find();
+    users: async () => {
+      const users = await User.find();
+      if (users) {
+        return users
+      }
     },
-    channel: (parent, args, context, info) => {
-      //  query ChannelOneQuery {
-      //     channel(id: "8455d4-02c2-1cf6-a07f-6cde1373b6da") {
-      //        id
-      //        name
-      //        userId
-      //        owner
-      //        publishedDate
-      //    }
-      //  }
-      return Channel.findOne({ id: args.id });
+    channel: async (parent, args, context, info) => {
+      const { id } = args;
+      const channel = await Channel.findOne({ id: id });
+      return channel
     },
-    channels: () => {
-      // query ChannelsQuery {
-      //   channels {
-      //     id
-      //     name
-      //     userId
-      //     owner
-      //     publishedDate
-      //   }
-      // }
-      return Channel.find();
+    channels: async () => {
+      const channels = await Channel.find();
+      return channels
     },
-    message: (parent, args, context, info) => {
-      // query MessagesQuery {
-      //   messages {
-      //       id
-      //       channelId
-      //       userId
-      //       conversationText
-      //       translateText
-      //       timestamp
-      //       metadata
-      //       isAudioRecord
-      //       publishedDate
-      //   }
-      // }
-      return Message.findOne({ id: args.id });
+    message: async (parent, args, context, info) => {
+      const { id } = args;
+      const message = await Message.findOne({ id: id });
+      return message
     },
-    messages: () => {
-      // query MessageOneQuery {
-      //   message(id: "cf74485-aef-16f2-5ed3-fcee3586b5e") {
-      //       id
-      //       channelId
-      //       userId
-      //       conversationText
-      //       translateText
-      //       timestamp
-      //       metadata
-      //       isAudioRecord
-      //       publishedDate
-      //   }
-      // }
-      return Message.find();
+    messages: async () => {
+      const messages = await Message.find();
+      return messages
     }
   },
+  Mutation: {
+    createUser: async ({ user }) => {
+      const { password } = user
+      const new_user = await new User(user)
+      await new_user.setPassword(password)
+      await new_user.save();
+      return new_user.serialize();
+    },
+    updateUser: async ({ userId, user }) => {
+      const update_user = await User.findOneAndUpdate(
+        { userId: userId },
+        user,
+        {
+          new: true, //body: updated data
+        }
+      );
+      return update_user.serialize();
+    },
+    updateChannel: async ({ _id, channel }) => {
+      const update_channel = await Channel.findByIdAndUpdate(
+        _id,
+        channel,
+        {
+          new: true, //body: updated data
+        }
+      );
+      return update_channel;
+    },
+    updateMessage: async ({ id, message }) => {
+      const update_message = await Message.findOneAndUpdate(
+        { id: id },
+        message,
+        {
+          new: true, //body: updated data
+        }
+      );
+      return update_message;
+    },
+    deleteUsers: async ({ ids }) => {
+      let users = []
+      ids.forEach(async id => {
+        const user = await User.findByOneAndRemove({ id: id });
+        users.push(user)
+      });
+      return users;
+    },
+    deleteChannels: async ({ _ids }) => {
+      let channels = []
+      _ids.forEach(async _id => {
+        const channel = await Channel.findByIdAndRemove(_id);
+        channels.push(channel)
+      });
+      return channels;
+    },
+    deleteMessages: async ({ ids }) => {
+      let messages = []
+      ids.forEach(async id => {
+        const message = await Message.findByOneAndRemove({ id: id });
+        messages.push(message)
+      });
+      return messages;
+    },
+  }
 };
 
 module.exports = {

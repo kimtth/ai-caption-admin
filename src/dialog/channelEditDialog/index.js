@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { DialogTitle, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,16 +10,31 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
+import { channelOneQuery, channelUpdateQuery } from '../../api/graph-queries';
 
 const ChannelEditDialog = (props) => {
   const { open, setOpen, selectedChannelIds } = props;
+  const [bool] = React.useState(true);
+  const { loading, error, data } = useQuery(channelOneQuery, {
+    variables: { id: selectedChannelIds },
+  });
+  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(channelUpdateQuery);
+
+  if (loading || loadingM) return 'Loading...';
+  if (called) return 'Called...';
+  if (error) return `Error! ${error.message}`;
+  if (errorM) return `ErrorM! ${errorM.message}`;
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleEdit = () => {
-    selectedChannelIds.map((channelId) => console.log(channelId));
+  const handleEdit = (e) => {
+    e.preventDefault();
+    //selectedChannelIds.map((channelId) => console.log(channelId));
+    const channelValue = new FormData(e.target);
+    handleEditFragment({ variables: { _id: selectedChannelIds, channel: channelValue } });
+    console.log(dataM);
     setOpen(false);
   };
 
@@ -28,93 +44,98 @@ const ChannelEditDialog = (props) => {
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           <Typography id="form-dialog-title" variant="h3" component="span">Edit Channel</Typography>
         </DialogTitle>
-        <DialogContent dividers>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Channel ID: </Typography>
+        <form onSubmit={handleEdit}>
+          <DialogContent dividers>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Channel ID: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="id"
+                  label="Channel Id"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={data?.id}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <TextField
-                margin="dense"
-                id="channelId"
-                label="Channel Id"
-                variant="outlined"
-                fullWidth
-                disabled
-              />
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Channel Name: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  label="Channel Name"
+                  variant="outlined"
+                  fullWidth
+                  value={data?.name}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Channel Name: </Typography>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">User Id: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="userId"
+                  label="User Id"
+                  variant="outlined"
+                  fullWidth
+                  value={data?.userId}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="channelname"
-                label="Channel Name"
-                variant="outlined"
-                fullWidth
-              />
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Owner: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl component="span">
+                  <RadioGroup row aria-label="position" name="position" defaultValue={bool} value={data?.owner}>
+                    <FormControlLabel
+                      value={bool}
+                      control={<Radio color="primary" />}
+                      label="Publisher"
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      value={!bool}
+                      control={<Radio color="primary" />}
+                      label="Subscriber"
+                      labelPlacement="start"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">User Id: </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                margin="dense"
-                id="userid"
-                label="User Id"
-                variant="outlined"
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Owner: </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl component="span">
-                <RadioGroup row aria-label="position" name="position" defaultValue="publisher">
-                  <FormControlLabel
-                    value="publisher"
-                    control={<Radio color="primary" />}
-                    label="Publisher"
-                    labelPlacement="start"
-                  />
-                  <FormControlLabel
-                    value="subscriber"
-                    control={<Radio color="primary" />}
-                    label="Subscriber"
-                    labelPlacement="start"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
+          </DialogContent>
+        </form>
         <DialogActions>
-          <Button onClick={handleEdit} color="primary" variant="contained">
+          <Button type="submit" color="primary" variant="contained">
             Save
           </Button>
           <Button onClick={handleClose} color="primary" variant="outlined">

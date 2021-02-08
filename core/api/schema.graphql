@@ -1,4 +1,14 @@
+
+type User {
+    _id: ID!
+    userId: ID!
+    username: String
+    password: String
+    publishedDate: String
+}
+
 type Channel {
+    _id: ID!
     id: ID!
     name: String
     userId: String
@@ -7,6 +17,7 @@ type Channel {
 }
 
 type Message {
+    _id: ID!
     id: ID!
     channelId: String
     userId: String
@@ -18,13 +29,6 @@ type Message {
     publishedDate: String
 }
 
-type User {
-    userId: ID!
-    username: String
-    password: String
-    publishedDate: String
-}
-
 type Query {
     hello: String
     channels: [Channel]
@@ -33,4 +37,41 @@ type Query {
     channel(id: ID!): Channel
     message(id: ID!): Message
     user(userId: ID!): User
+}
+
+input UserInput {
+    userId: ID!
+    username: String
+    password: String
+    publishedDate: String
+}
+
+input ChannelInput {
+    id: ID!
+    name: String
+    userId: String
+    owner: Boolean
+    publishedDate: String
+}
+
+input MessageInput {
+    id: ID!
+    channelId: String
+    userId: String
+    conversationText: String
+    translateText: String
+    timestamp: String
+    metadata: String
+    isAudioRecord: Boolean
+    publishedDate: String
+}
+
+type Mutation {
+  createUser(user: UserInput): User
+  updateUser(userId: ID!, user: UserInput): User
+  updateChannel(_id: ID!, channel: ChannelInput): Channel
+  updateMessage(id: ID!, message: MessageInput): Message
+  deleteUsers(ids: [ID]!): [User]
+  deleteChannels(_ids: [ID]!): [Channel]
+  deleteMessages(ids: [ID]!): [Message]
 }

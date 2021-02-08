@@ -100,12 +100,12 @@ const Results = ({ className, channels, selectedChannelIds, setSelectedChannelId
                 <TableRow
                   hover
                   key={channel.id}
-                  selected={selectedChannelIds.indexOf(channel.id) !== -1}
+                  selected={selectedChannelIds.indexOf(channel._id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedChannelIds.indexOf(channel.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, channel.id)}
+                      checked={selectedChannelIds.indexOf(channel._id) !== -1}
+                      onChange={(event) => handleSelectOne(event, channel._id)}
                       value="true"
                     />
                   </TableCell>

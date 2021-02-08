@@ -1,3 +1,4 @@
+import { useMutation, useQuery } from '@apollo/client';
 import { DialogTitle, Grid, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -9,16 +10,29 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import TextField from '@material-ui/core/TextField';
 import React from 'react';
+import { messageOneQuery, messageUpdateQuery } from '../../api/graph-queries';
 
 const MessageEditDialog = (props) => {
   const { open, setOpen, selectedMessageIds } = props;
+  const { loading, error, data } = useQuery(messageOneQuery, {
+    variables: { id: selectedMessageIds },
+  });
+  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery);
+
+  if (loading || loadingM) return 'Loading...';
+  if (called) return 'Called...';
+  if (error) return `Error! ${error.message}`;
+  if (errorM) return `ErrorM! ${errorM.message}`;
 
   const handleClose = () => {
     setOpen(false);
   };
 
-  const handleEdit = () => {
-    selectedMessageIds.map((messageId) => console.log(messageId));
+  const handleEdit = (e) => {
+    e.preventDefault();
+    const messageValue = new FormData(e.target);
+    handleEditFragment({ variables: { id: selectedMessageIds, channel: messageValue } });
+    console.log(dataM);
     setOpen(false);
   };
 
@@ -28,116 +42,122 @@ const MessageEditDialog = (props) => {
         <DialogTitle id="customized-dialog-title" onClose={handleClose}>
           <Typography id="form-dialog-title" variant="h3" component="span">Edit Message</Typography>
         </DialogTitle>
-        <DialogContent dividers>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Channel ID: </Typography>
+        <form onSubmit={handleEdit}>
+          <DialogContent dividers>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Channel ID: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="channelId"
+                  label="Channel Id"
+                  variant="outlined"
+                  fullWidth
+                  disabled
+                  value={data?.channelId}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <TextField
-                margin="dense"
-                id="channelId"
-                label="Channel Id"
-                variant="outlined"
-                fullWidth
-                disabled
-              />
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">User ID: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="userId"
+                  type="email"
+                  label="e-mail"
+                  variant="outlined"
+                  fullWidth
+                  value={data?.userId}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">User ID: </Typography>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Recognized: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  autoFocus
+                  margin="dense"
+                  id="conversationText"
+                  label="Recognized"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={5}
+                  value={data?.conversationText}
+                />
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <TextField
-                margin="dense"
-                id="userId (e-mail)"
-                type="email"
-                label="e-mail"
-                variant="outlined"
-                fullWidth
-              />
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Translate: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="translateText"
+                  label="Translate"
+                  variant="outlined"
+                  fullWidth
+                  multiline
+                  rows={5}
+                  value={data?.translateText}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Recognized: </Typography>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Audio Record: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <FormControl component="audiorecord">
+                  <RadioGroup row aria-label="position" name="position" defaultValue="true">
+                    <FormControlLabel
+                      value="true"
+                      control={<Radio color="primary" />}
+                      label="Yes"
+                      labelPlacement="start"
+                    />
+                    <FormControlLabel
+                      value="false"
+                      control={<Radio color="primary" />}
+                      label="No"
+                      labelPlacement="start"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Grid>
             </Grid>
-            <Grid item xs={9}>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="recognized"
-                label="Recognized"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={5}
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Translate: </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <TextField
-                margin="dense"
-                id="translate"
-                label="Translate"
-                variant="outlined"
-                fullWidth
-                multiline
-                rows={5}
-              />
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            justify="center"
-            alignItems="center"
-          >
-            <Grid item xs={3}>
-              <Typography variant="subtitle1">Audio Record: </Typography>
-            </Grid>
-            <Grid item xs={9}>
-              <FormControl component="audiorecord">
-                <RadioGroup row aria-label="position" name="position" defaultValue="true">
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio color="primary" />}
-                    label="Yes"
-                    labelPlacement="start"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio color="primary" />}
-                    label="No"
-                    labelPlacement="start"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Grid>
-          </Grid>
-        </DialogContent>
+          </DialogContent>
+        </form>
         <DialogActions>
-          <Button onClick={handleEdit} color="primary" variant="contained">
+          <Button type="submit" color="primary" variant="contained">
             Save
           </Button>
           <Button onClick={handleClose} color="primary" variant="outlined">

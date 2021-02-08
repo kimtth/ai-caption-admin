@@ -1,19 +1,11 @@
 {
-
   "parser": "babel-eslint",
-
   "env": {
-
     "es6": true,
-
     "browser": true
-
   },
-
   "extends": ["airbnb", "airbnb/hooks", "eslint:recommended"],
-
   "settings": {
-
     "import/resolver": {
       "node": {
         "paths": ["src"],
