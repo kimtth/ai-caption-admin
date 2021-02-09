@@ -20,11 +20,11 @@ const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
 
   const handleClickEditOpen = (open) => {
     if (selectedChannelIds?.length > 1) {
-      // eslint-disable-next-line
       alert('please select only one item.');
+      return;
     } else if (selectedChannelIds?.length === 0) {
-      // eslint-disable-next-line
       alert('please select an item.');
+      return;
     } else {
       setEditOpen(open);
     }
@@ -32,8 +32,8 @@ const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
 
   const handleClickDeleteOpen = (open) => {
     if (selectedChannelIds?.length === 0) {
-      // eslint-disable-next-line
       alert('please select an item.');
+      return;
     } else {
       setDeleteOpen(open);
     }

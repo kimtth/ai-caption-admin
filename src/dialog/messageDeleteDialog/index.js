@@ -19,7 +19,6 @@ const MessageDeleteDialog = (props) => {
   const handleDelete = () => {
     selectedMessageIds.map((messageId) => console.log(messageId));
     handleDeleteFragment({ variables: { ids: selectedMessageIds } });
-    console.log(data); // todo
     setOpen(false);
   };
 

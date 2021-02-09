@@ -38,7 +38,7 @@ app.use(router.routes()).use(router.allowedMethods());
 let mongoUri = process.env.MONGO_ENDPOINT
 let port = 80
 if (process.env.NODE_ENV !== 'production') { //development
-    port = 8080;
+    port = 8081;
 }
 
 const apollo = new ApolloServer({ typeDefs, resolvers });

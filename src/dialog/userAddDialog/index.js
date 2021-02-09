@@ -11,6 +11,9 @@ import { userCreateQuery } from '../../api/graph-queries';
 const UserAddDialog = (props) => {
   const { open, setOpen } = props;
   const [handleAddFragment, { loadingM, errorM, dataM, called }] = useMutation(userCreateQuery);
+  const [userId, setUserId] = React.useState('');
+  const [userName, setUserName] = React.useState('');
+  const [passWord, setPassword] = React.useState('');
 
   if (loadingM) return 'Loading...';
   if (called) return 'Called...';
@@ -22,11 +25,29 @@ const UserAddDialog = (props) => {
 
   const handleAdd = (e) => {
     e.preventDefault();
-    const userValue = new FormData(e.target);
+    const userValue = {
+      userId: userId,
+      username: userName,
+      password: passWord
+    }
+    delete userValue.__typename;
+    delete userValue._id;
+
     handleAddFragment({ variables: { user: userValue } });
-    console.log(dataM);
     setOpen(false);
   };
+
+  const handleIdChange = (evt) => {
+    setUserId(evt.target.value);
+  }
+
+  const handleNameChange = (evt) => {
+    setUserName(evt.target.value);
+  }
+
+  const handlePasswordChange = (evt) => {
+    setPassword(evt.target.value);
+  }
 
   return (
     <div>
@@ -48,11 +69,12 @@ const UserAddDialog = (props) => {
                 <TextField
                   autoFocus
                   margin="dense"
-                  id="userId (e-mail)"
+                  id="userId"
                   type="email"
                   label="e-mail"
                   variant="outlined"
                   fullWidth
+                  onChange={handleIdChange}
                 />
               </Grid>
             </Grid>
@@ -71,6 +93,7 @@ const UserAddDialog = (props) => {
                   label="User Name"
                   variant="outlined"
                   fullWidth
+                  onChange={handleNameChange}
                 />
               </Grid>
             </Grid>
@@ -87,14 +110,13 @@ const UserAddDialog = (props) => {
                   margin="dense"
                   id="password"
                   label="Password"
-                  // type="password"
                   variant="outlined"
                   fullWidth
+                  onChange={handlePasswordChange}
                 />
               </Grid>
             </Grid>
           </DialogContent>
-        </form>
         <DialogActions>
           <Button type="submit" color="primary" variant="contained">
             Save
@@ -103,6 +125,7 @@ const UserAddDialog = (props) => {
             Cancel
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );

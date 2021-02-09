@@ -15,9 +15,19 @@ import { messageOneQuery, messageUpdateQuery } from '../../api/graph-queries';
 const MessageEditDialog = (props) => {
   const { open, setOpen, selectedMessageIds } = props;
   const { loading, error, data } = useQuery(messageOneQuery, {
-    variables: { id: selectedMessageIds },
+    variables: { id: selectedMessageIds[0] },
+    skip: selectedMessageIds.length < 1
   });
   const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery);
+  const [conversationText, setConversationText] = React.useState('');
+  const [isAudioRecord, setIsAudioRecord] = React.useState('');
+
+  React.useEffect(() => {
+    if(data){
+      setConversationText(data?.message.conversationText);
+      setIsAudioRecord(data?.message.isAudioRecord ? 'yes' : 'no');
+    }
+  }, [data])
 
   if (loading || loadingM) return 'Loading...';
   if (called) return 'Called...';
@@ -30,11 +40,25 @@ const MessageEditDialog = (props) => {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    const messageValue = new FormData(e.target);
-    handleEditFragment({ variables: { id: selectedMessageIds, channel: messageValue } });
-    console.log(dataM);
+    const messageValue = {
+      ...data.message,
+      conversationText: conversationText,
+      isAudioRecord: isAudioRecord === 'yes' ? true : false
+    }
+    delete messageValue.__typename;
+    delete messageValue._id;
+
+    handleEditFragment({ variables: { id: selectedMessageIds[0], message: messageValue } });
     setOpen(false);
   };
+
+  const handleChange = (evt) => {
+    setConversationText(evt.target.value);
+  }
+
+  const handleRadioChange = (evt) => {
+    setIsAudioRecord(evt.target.value);
+  }
 
   return (
     <div>
@@ -60,7 +84,7 @@ const MessageEditDialog = (props) => {
                   variant="outlined"
                   fullWidth
                   disabled
-                  value={data?.channelId}
+                  value={data?.message.channelId}
                 />
               </Grid>
             </Grid>
@@ -80,7 +104,8 @@ const MessageEditDialog = (props) => {
                   label="e-mail"
                   variant="outlined"
                   fullWidth
-                  value={data?.userId}
+                  disabled
+                  value={data?.message.userId}
                 />
               </Grid>
             </Grid>
@@ -101,8 +126,9 @@ const MessageEditDialog = (props) => {
                   variant="outlined"
                   fullWidth
                   multiline
-                  rows={5}
-                  value={data?.conversationText}
+                  rows={10}
+                  onChange={handleChange}
+                  value={conversationText}
                 />
               </Grid>
             </Grid>
@@ -123,7 +149,8 @@ const MessageEditDialog = (props) => {
                   fullWidth
                   multiline
                   rows={5}
-                  value={data?.translateText}
+                  disabled
+                  value={data?.message.translateText}
                 />
               </Grid>
             </Grid>
@@ -136,16 +163,21 @@ const MessageEditDialog = (props) => {
                 <Typography variant="subtitle1">Audio Record: </Typography>
               </Grid>
               <Grid item xs={9}>
-                <FormControl component="audiorecord">
-                  <RadioGroup row aria-label="position" name="position" defaultValue="true">
+                <FormControl component="span">
+                  <RadioGroup
+                    row aria-label="position"
+                    name="position"
+                    defaultValue="true"
+                    onChange={handleRadioChange}
+                    value={isAudioRecord}>
                     <FormControlLabel
-                      value="true"
+                      value="yes"
                       control={<Radio color="primary" />}
                       label="Yes"
                       labelPlacement="start"
                     />
                     <FormControlLabel
-                      value="false"
+                      value="no"
                       control={<Radio color="primary" />}
                       label="No"
                       labelPlacement="start"
@@ -155,7 +187,6 @@ const MessageEditDialog = (props) => {
               </Grid>
             </Grid>
           </DialogContent>
-        </form>
         <DialogActions>
           <Button type="submit" color="primary" variant="contained">
             Save
@@ -164,6 +195,7 @@ const MessageEditDialog = (props) => {
             Cancel
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );

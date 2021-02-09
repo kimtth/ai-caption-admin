@@ -34,7 +34,7 @@ type Query {
     channels: [Channel]
     messages: [Message]
     users: [User]
-    channel(id: ID!): Channel
+    channel(_id: ID!): Channel
     message(id: ID!): Message
     user(userId: ID!): User
 }
@@ -71,7 +71,7 @@ type Mutation {
   updateUser(userId: ID!, user: UserInput): User
   updateChannel(_id: ID!, channel: ChannelInput): Channel
   updateMessage(id: ID!, message: MessageInput): Message
-  deleteUsers(ids: [ID]!): [User]
+  deleteUsers(userIds: [ID]!): [User]
   deleteChannels(_ids: [ID]!): [Channel]
   deleteMessages(ids: [ID]!): [Message]
 }

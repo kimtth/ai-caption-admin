@@ -9,9 +9,10 @@ import React from 'react';
 import { channelDeleteQuery } from '../../api/graph-queries';
 
 const ChannelDeleteDialog = (props) => {
-  const { open, setOpen, selectedChannelIds } = props;
-  const [handleDeleteFragment, { loading, error, data, called }] = useMutation(channelDeleteQuery);
-  console.log(loading, error, data, called);
+  const { open, setOpen, selectedChannelIds, callback } = props;
+  const [handleDeleteFragment, { data }] = useMutation(channelDeleteQuery);
+  // const [handleDeleteFragment, { loading, error, data, called }]
+
 
   const handleClose = () => {
     setOpen(false);
@@ -20,7 +21,6 @@ const ChannelDeleteDialog = (props) => {
   const handleDelete = () => {
     selectedChannelIds.map((_Id) => console.log(_Id));
     handleDeleteFragment({ variables: { _ids: selectedChannelIds } });
-    console.log(data); // todo
     setOpen(false);
   };
 

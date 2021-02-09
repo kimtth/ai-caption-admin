@@ -17,9 +17,7 @@ const UserDeleteDialog = (props) => {
   };
 
   const handleDelete = () => {
-    // selectedUserIds.map((userId) => console.log(userId));
-    handleDeleteFragment({ variables: { ids: selectedUserIds } });
-    console.log(data); // todo
+    handleDeleteFragment({ variables: { userIds: selectedUserIds } });
     setOpen(false);
   };
 

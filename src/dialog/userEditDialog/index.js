@@ -11,9 +11,19 @@ import { userOneQuery, userUpdateQuery } from '../../api/graph-queries';
 const UserEditDialog = (props) => {
   const { open, setOpen, selectedUserIds } = props;
   const { loading, error, data } = useQuery(userOneQuery, {
-    variables: { id: selectedUserIds },
+    variables: { userId: selectedUserIds[0] },
+    skip: selectedUserIds.length < 1
   });
   const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(userUpdateQuery);
+  const [userName, setUserName] = React.useState('');
+  const [passWord, setPassword] = React.useState('');
+
+  React.useEffect(() => {
+    if (data) {
+      setUserName(data?.user.username);
+      setPassword(data?.user.password);
+    }
+  }, [data])
 
   if (loading || loadingM) return 'Loading...';
   if (called) return 'Called...';
@@ -26,11 +36,25 @@ const UserEditDialog = (props) => {
 
   const handleEdit = (e) => {
     e.preventDefault();
-    const userValue = new FormData(e.target);
-    handleEditFragment({ variables: { userId: selectedUserIds, user: userValue } });
-    console.log(dataM);
+    const userValue = {
+      ...data.user,
+      username: userName,
+      password: passWord
+    }
+    delete userValue.__typename;
+    delete userValue._id;
+
+    handleEditFragment({ variables: { userId: selectedUserIds[0], user: userValue } });
     setOpen(false);
   };
+
+  const handleChange = (evt) => {
+    setUserName(evt.target.value);
+  }
+
+  const handlePasswordChange = (evt) => {
+    setPassword(evt.target.value);
+  }
 
   return (
     <div>
@@ -57,7 +81,8 @@ const UserEditDialog = (props) => {
                   label="e-mail"
                   variant="outlined"
                   fullWidth
-                  value={data?.userId}
+                  disabled
+                  value={data?.user.userId}
                 />
               </Grid>
             </Grid>
@@ -76,7 +101,8 @@ const UserEditDialog = (props) => {
                   label="User Name"
                   variant="outlined"
                   fullWidth
-                  value={data?.username}
+                  value={userName}
+                  onChange={handleChange}
                 />
               </Grid>
             </Grid>
@@ -96,12 +122,12 @@ const UserEditDialog = (props) => {
                   // type="password"
                   variant="outlined"
                   fullWidth
-                  value={data?.password}
+                  value={passWord}
+                  onChange={handlePasswordChange}
                 />
               </Grid>
             </Grid>
           </DialogContent>
-        </form>
         <DialogActions>
           <Button type="submit" color="primary" variant="contained">
             Save
@@ -110,6 +136,7 @@ const UserEditDialog = (props) => {
             Cancel
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );

@@ -14,11 +14,20 @@ import { channelOneQuery, channelUpdateQuery } from '../../api/graph-queries';
 
 const ChannelEditDialog = (props) => {
   const { open, setOpen, selectedChannelIds } = props;
-  const [bool] = React.useState(true);
   const { loading, error, data } = useQuery(channelOneQuery, {
-    variables: { id: selectedChannelIds },
+    variables: { id: selectedChannelIds[0] },
+    skip: selectedChannelIds.length < 1
   });
   const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(channelUpdateQuery);
+  const [channelName, setChannelName] = React.useState('');
+  const [owner, setOwner] = React.useState('');
+
+  React.useEffect(() => {
+    if (data) {
+      setChannelName(data?.channel.name);
+      setOwner(data?.channel.owner ? 'pub' : 'sub');
+    }
+  }, [data])
 
   if (loading || loadingM) return 'Loading...';
   if (called) return 'Called...';
@@ -30,13 +39,26 @@ const ChannelEditDialog = (props) => {
   };
 
   const handleEdit = (e) => {
-    e.preventDefault();
-    //selectedChannelIds.map((channelId) => console.log(channelId));
-    const channelValue = new FormData(e.target);
-    handleEditFragment({ variables: { _id: selectedChannelIds, channel: channelValue } });
-    console.log(dataM);
+    e.preventDefault()
+    const channelValue = {
+      ...data.channel,
+      name: channelName,
+      owner: owner === 'pub' ? true : false
+    }
+    delete channelValue.__typename;
+    delete channelValue._id;
+
+    handleEditFragment({ variables: { _id: selectedChannelIds[0], channel: channelValue } });
     setOpen(false);
   };
+
+  const handleChange = (evt) => {
+    setChannelName(evt.target.value);
+  }
+
+  const handleRadioChange = (evt) => {
+    setOwner(evt.target.value);
+  }
 
   return (
     <div>
@@ -62,7 +84,7 @@ const ChannelEditDialog = (props) => {
                   variant="outlined"
                   fullWidth
                   disabled
-                  value={data?.id}
+                  value={data?.channel.id}
                 />
               </Grid>
             </Grid>
@@ -82,7 +104,8 @@ const ChannelEditDialog = (props) => {
                   label="Channel Name"
                   variant="outlined"
                   fullWidth
-                  value={data?.name}
+                  onChange={handleChange}
+                  value={channelName}
                 />
               </Grid>
             </Grid>
@@ -101,7 +124,8 @@ const ChannelEditDialog = (props) => {
                   label="User Id"
                   variant="outlined"
                   fullWidth
-                  value={data?.userId}
+                  disabled
+                  value={data?.channel.userId}
                 />
               </Grid>
             </Grid>
@@ -115,15 +139,20 @@ const ChannelEditDialog = (props) => {
               </Grid>
               <Grid item xs={9}>
                 <FormControl component="span">
-                  <RadioGroup row aria-label="position" name="position" defaultValue={bool} value={data?.owner}>
+                  <RadioGroup
+                    row aria-label="position"
+                    name="position"
+                    defaultValue="pub"
+                    onChange={handleRadioChange}
+                    value={owner}>
                     <FormControlLabel
-                      value={bool}
+                      value="pub"
                       control={<Radio color="primary" />}
                       label="Publisher"
                       labelPlacement="start"
                     />
                     <FormControlLabel
-                      value={!bool}
+                      value="sub"
                       control={<Radio color="primary" />}
                       label="Subscriber"
                       labelPlacement="start"
@@ -133,7 +162,6 @@ const ChannelEditDialog = (props) => {
               </Grid>
             </Grid>
           </DialogContent>
-        </form>
         <DialogActions>
           <Button type="submit" color="primary" variant="contained">
             Save
@@ -142,6 +170,7 @@ const ChannelEditDialog = (props) => {
             Cancel
           </Button>
         </DialogActions>
+        </form>
       </Dialog>
     </div>
   );

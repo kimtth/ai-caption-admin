@@ -46,6 +46,7 @@ export const userOneQuery = gql `
     user(userId: $userId){
       userId
       username
+      password
       publishedDate
     }
   }
@@ -53,7 +54,8 @@ export const userOneQuery = gql `
 
 export const channelOneQuery = gql `
   query ChannelOneQuery($id: ID!) {
-    channel(id: $id) {
+    channel(_id: $id) {
+            _id
             id
             name
             userId
@@ -84,7 +86,6 @@ export const userCreateQuery = gql`
     createUser(
       user: $user
     ){
-      id
       userId
       username
       password
@@ -98,7 +99,6 @@ export const userUpdateQuery = gql`
       userId: $userId,
       user: $user
     ){
-      id
       userId
       username
       password
@@ -107,9 +107,9 @@ export const userUpdateQuery = gql`
 `;
 
 export const channelUpdateQuery = gql`
-  mutation ChannelUpdateQuery($channelId: ID!, $channel: ChannelInput!){
+  mutation ChannelUpdateQuery($_id: ID!, $channel: ChannelInput!){
     updateChannel(
-      _id: $channelId,
+      _id: $_id,
       channel: $channel
     ){
       id
@@ -121,9 +121,9 @@ export const channelUpdateQuery = gql`
 `;
 
 export const messageUpdateQuery = gql`
-  mutation MessageUpdateQuery($messageId: ID!, $message: MessageInput){
+  mutation MessageUpdateQuery($id: ID!, $message: MessageInput){
     updateMessage(
-      id: $messageId,
+      id: $id,
       message: $message
     ){
       id
@@ -139,8 +139,8 @@ export const messageUpdateQuery = gql`
 `;
 
 export const userDeleteQuery = gql ` 
-  mutation UserDeleteQuery($ids: [ID]!) {
-    deleteUsers(ids: $ids){
+  mutation UserDeleteQuery($userIds: [ID]!) {
+    deleteUsers(userIds: $userIds){
       userId
       username
       publishedDate
@@ -161,7 +161,7 @@ export const channelDeleteQuery = gql `
 `;
 
 export const messageDeleteQuery = gql`
-  mutation MessageDeleteQuery($ids: ID!) {
+  mutation MessageDeleteQuery($ids: [ID]!) {
     deleteMessages(ids: $ids) {
       id
       channelId

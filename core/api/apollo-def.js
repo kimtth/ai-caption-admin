@@ -26,8 +26,8 @@ const resolvers = {
       }
     },
     channel: async (parent, args, context, info) => {
-      const { id } = args;
-      const channel = await Channel.findOne({ id: id });
+      const { _id } = args;
+      const channel = await Channel.findById(_id);
       return channel
     },
     channels: async () => {
@@ -45,14 +45,16 @@ const resolvers = {
     }
   },
   Mutation: {
-    createUser: async ({ user }) => {
+    createUser: async (parent, args, context, info) => {
+      const { user } = args;
       const { password } = user
       const new_user = await new User(user)
       await new_user.setPassword(password)
       await new_user.save();
       return new_user.serialize();
     },
-    updateUser: async ({ userId, user }) => {
+    updateUser: async (parent, args, context, info) => {
+      const { userId, user } = args;
       const update_user = await User.findOneAndUpdate(
         { userId: userId },
         user,
@@ -62,7 +64,8 @@ const resolvers = {
       );
       return update_user.serialize();
     },
-    updateChannel: async ({ _id, channel }) => {
+    updateChannel: async (parent, args, context, info) => {
+      const { _id, channel } = args;
       const update_channel = await Channel.findByIdAndUpdate(
         _id,
         channel,
@@ -72,7 +75,8 @@ const resolvers = {
       );
       return update_channel;
     },
-    updateMessage: async ({ id, message }) => {
+    updateMessage: async (parent, args, context, info) => {
+      const { id, message } = args
       const update_message = await Message.findOneAndUpdate(
         { id: id },
         message,
@@ -82,15 +86,18 @@ const resolvers = {
       );
       return update_message;
     },
-    deleteUsers: async ({ ids }) => {
+    deleteUsers: async (parent, args, context, info) => {
+      const { userIds } = args
+      console.log(userIds)
       let users = []
-      ids.forEach(async id => {
-        const user = await User.findByOneAndRemove({ id: id });
-        users.push(user)
+      userIds.forEach(async userId => {
+        const user = await User.findOneAndRemove({ userId: userId });
+        users.push(user);
       });
       return users;
     },
-    deleteChannels: async ({ _ids }) => {
+    deleteChannels: async (parent, args, context, info) => {
+      const { _ids } = args 
       let channels = []
       _ids.forEach(async _id => {
         const channel = await Channel.findByIdAndRemove(_id);
@@ -98,10 +105,11 @@ const resolvers = {
       });
       return channels;
     },
-    deleteMessages: async ({ ids }) => {
+    deleteMessages: async (parent, args, context, info) => {
+      const { ids } = args 
       let messages = []
       ids.forEach(async id => {
-        const message = await Message.findByOneAndRemove({ id: id });
+        const message = await Message.findOneAndRemove({ id: id });
         messages.push(message)
       });
       return messages;
