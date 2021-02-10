@@ -4,6 +4,7 @@ import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
 import data from './data';
+import { useNavigate as useHistory } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
 const SpeechListView = () => {
   const classes = useStyles();
   const [customers] = useState(data);
+  const history = useHistory()
 
   return (
     <Page

@@ -1,17 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Grid,
-  LinearProgress,
-  Typography,
-  makeStyles,
-  colors
-} from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, Grid, LinearProgress, Typography, makeStyles, colors } from '@material-ui/core';
 import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
 
 const useStyles = makeStyles(() => ({
@@ -25,7 +15,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TasksProgress = ({ className, ...rest }) => {
+const TasksLearning = ({ className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -45,7 +35,7 @@ const TasksProgress = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TASKS PROGRESS
+              LEARNING / TOTAL (%)
             </Typography>
             <Typography
               color="textPrimary"
@@ -71,8 +61,8 @@ const TasksProgress = ({ className, ...rest }) => {
   );
 };
 
-TasksProgress.propTypes = {
+TasksLearning.propTypes = {
   className: PropTypes.string
 };
 
-export default TasksProgress;
+export default TasksLearning;

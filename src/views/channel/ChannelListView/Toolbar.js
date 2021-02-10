@@ -5,18 +5,24 @@ import { Box, Button, Card, CardContent, Grid, TextField, InputAdornment, SvgIco
 import { Search as SearchIcon } from 'react-feather';
 import ChannelDeleteDialog from '../../../dialog/channelDeleteDialog';
 import ChannelEditDialog from '../../../dialog/channelEditDialog';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   basicButton: {
     marginRight: theme.spacing(1)
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 150,
+  },
 }));
 
-const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
+const Toolbar = ({ className, selectedChannelIds, callback, ...rest }) => {
   const classes = useStyles();
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [searchCriteria, setSearchCriteria] = React.useState('name');
 
   const handleClickEditOpen = (open) => {
     if (selectedChannelIds?.length > 1) {
@@ -39,6 +45,10 @@ const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
     }
   };
 
+  const handleSelectChange = (e) => {
+    setSearchCriteria(e.target.value);
+  }
+
   return (
     <div
       className={clsx(classes.root, className)}
@@ -46,11 +56,13 @@ const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
     >
       <ChannelDeleteDialog
         open={deleteOpen}
+        callback={callback}
         setOpen={handleClickDeleteOpen}
         selectedChannelIds={selectedChannelIds}
       />
       <ChannelEditDialog
         open={editOpen}
+        callback={callback}
         setOpen={handleClickEditOpen}
         selectedChannelIds={selectedChannelIds}
       />
@@ -83,7 +95,25 @@ const Toolbar = ({ className, selectedChannelIds, ...rest }) => {
                 justify="center"
                 alignItems="center"
               >
-                <Grid item xs={11} style={{ paddingRight: 10 }}>
+                <Grid item xs={2}>
+                  <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel id="simple-select-helper-label">Search Criteria</InputLabel>
+                    <Select
+                      labelId="simple-select-helper-label"
+                      id="simple-select-helper"
+                      value={searchCriteria}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={'id'}>Channel Id</MenuItem>
+                      <MenuItem value={'name'}>Channel Name</MenuItem>
+                      <MenuItem value={'userId'}>User Id</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={9} style={{ paddingRight: 10 }}>
                   <TextField
                     fullWidth
                     InputProps={{

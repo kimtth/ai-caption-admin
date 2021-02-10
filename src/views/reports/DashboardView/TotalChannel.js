@@ -1,15 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import {
-  Avatar,
-  Card,
-  CardContent,
-  Grid,
-  Typography,
-  makeStyles,
-  colors
-} from '@material-ui/core';
+import { Avatar, Card, CardContent, Grid, Typography, makeStyles, colors } from '@material-ui/core';
 import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
 
 const useStyles = makeStyles(() => ({
@@ -23,7 +15,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TotalProfit = ({ className, ...rest }) => {
+const TotalChannel = ({ className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -43,13 +35,13 @@ const TotalProfit = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              TOTAL PROFIT
+              TOTAL CHANNEL (PUB)
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              $23,200
+              200
             </Typography>
           </Grid>
           <Grid item>
@@ -63,8 +55,8 @@ const TotalProfit = ({ className, ...rest }) => {
   );
 };
 
-TotalProfit.propTypes = {
+TotalChannel.propTypes = {
   className: PropTypes.string
 };
 
-export default TotalProfit;
+export default TotalChannel;

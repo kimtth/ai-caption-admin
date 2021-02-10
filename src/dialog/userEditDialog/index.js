@@ -9,12 +9,12 @@ import React from 'react';
 import { userOneQuery, userUpdateQuery } from '../../api/graph-queries';
 
 const UserEditDialog = (props) => {
-  const { open, setOpen, selectedUserIds } = props;
+  const { open, setOpen, selectedUserIds, callback } = props;
   const { loading, error, data } = useQuery(userOneQuery, {
     variables: { userId: selectedUserIds[0] },
     skip: selectedUserIds.length < 1
   });
-  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(userUpdateQuery);
+  const [handleEditFragment, { loading: m_loading, error: m_error, data: m_data, called }] = useMutation(userUpdateQuery, {errorPolicy: 'all'});
   const [userName, setUserName] = React.useState('');
   const [passWord, setPassword] = React.useState('');
 
@@ -25,10 +25,9 @@ const UserEditDialog = (props) => {
     }
   }, [data])
 
-  if (loading || loadingM) return 'Loading...';
-  if (called) return 'Called...';
+  if (loading || m_loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  if (errorM) return `ErrorM! ${errorM.message}`;
+  if (m_error) return `ErrorM! ${m_error.message}`;
 
   const handleClose = () => {
     setOpen(false);
@@ -45,6 +44,7 @@ const UserEditDialog = (props) => {
     delete userValue._id;
 
     handleEditFragment({ variables: { userId: selectedUserIds[0], user: userValue } });
+    callback();
     setOpen(false);
   };
 

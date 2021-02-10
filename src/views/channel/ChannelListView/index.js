@@ -5,7 +5,7 @@ import Page from 'src/components/Page';
 import { channelsQuery } from '../../../api/graph-queries';
 import Results from './Results';
 import Toolbar from './Toolbar';
-// import data from './data';
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -20,11 +20,17 @@ const ChannelListView = () => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(channelsQuery);
   const [selectedChannelIds, setSelectedChannelIds] = useState([]);
+  const navigate = useNavigate()
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
 
   const channels = data ? data.channels : [];
+
+  const handleReload = () => {
+    // navigate('/app/channel', { replace: true });
+    navigate(0);
+  }
 
   return (
     <Page
@@ -33,6 +39,7 @@ const ChannelListView = () => {
     >
       <Container maxWidth={false}>
         <Toolbar
+          callback={handleReload}
           selectedChannelIds={selectedChannelIds}
         />
         <Box mt={3}>

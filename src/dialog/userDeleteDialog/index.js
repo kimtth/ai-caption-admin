@@ -9,8 +9,8 @@ import React from 'react';
 import { userDeleteQuery } from '../../api/graph-queries';
 
 const UserDeleteDialog = (props) => {
-  const { open, setOpen, selectedUserIds } = props;
-  const [handleDeleteFragment, { data }] = useMutation(userDeleteQuery);
+  const { open, setOpen, selectedUserIds, callback } = props;
+  const [handleDeleteFragment, { data }] = useMutation(userDeleteQuery, {errorPolicy: 'all'});
 
   const handleClose = () => {
     setOpen(false);
@@ -18,6 +18,7 @@ const UserDeleteDialog = (props) => {
 
   const handleDelete = () => {
     handleDeleteFragment({ variables: { userIds: selectedUserIds } });
+    callback();
     setOpen(false);
   };
 

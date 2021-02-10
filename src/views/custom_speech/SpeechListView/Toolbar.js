@@ -37,31 +37,6 @@ const Toolbar = ({ className, ...rest }) => {
           Edit
         </Button>
       </Box>
-      <Box mt={3}>
-        <Card>
-          <CardContent style={{ padding: 5 }}>
-            <Box maxWidth="98%">
-              <TextField
-                fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
-                        <SearchIcon />
-                      </SvgIcon>
-                    </InputAdornment>
-                  )
-                }}
-                placeholder="Search speech"
-                variant="outlined"
-              />
-            </Box>
-          </CardContent>
-        </Card>
-      </Box>
     </div>
   );
 };

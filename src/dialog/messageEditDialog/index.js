@@ -13,12 +13,12 @@ import React from 'react';
 import { messageOneQuery, messageUpdateQuery } from '../../api/graph-queries';
 
 const MessageEditDialog = (props) => {
-  const { open, setOpen, selectedMessageIds } = props;
+  const { open, setOpen, selectedMessageIds, callback } = props;
   const { loading, error, data } = useQuery(messageOneQuery, {
     variables: { id: selectedMessageIds[0] },
     skip: selectedMessageIds.length < 1
   });
-  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery);
+  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery, {errorPolicy: 'all'});
   const [conversationText, setConversationText] = React.useState('');
   const [isAudioRecord, setIsAudioRecord] = React.useState('');
 
@@ -30,7 +30,7 @@ const MessageEditDialog = (props) => {
   }, [data])
 
   if (loading || loadingM) return 'Loading...';
-  if (called) return 'Called...';
+  //if (called) return 'Called...';
   if (error) return `Error! ${error.message}`;
   if (errorM) return `ErrorM! ${errorM.message}`;
 
@@ -49,6 +49,7 @@ const MessageEditDialog = (props) => {
     delete messageValue._id;
 
     handleEditFragment({ variables: { id: selectedMessageIds[0], message: messageValue } });
+    callback();
     setOpen(false);
   };
 

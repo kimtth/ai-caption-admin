@@ -15,15 +15,15 @@ export const usersQuery = gql `
 export const messagesQuery = gql `
   query MessagesQuery {
     messages {
-        id
-        channelId
-        userId
-        conversationText
-        translateText
-        timestamp
-        metadata
-        isAudioRecord
-        publishedDate
+      id
+      channelId
+      userId
+      conversationText
+      translateText
+      timestamp
+      metadata
+      isAudioRecord
+      publishedDate
     }
   }
 `;
@@ -55,28 +55,68 @@ export const userOneQuery = gql `
 export const channelOneQuery = gql `
   query ChannelOneQuery($id: ID!) {
     channel(_id: $id) {
-            _id
-            id
-            name
-            userId
-            owner
-            publishedDate
-      }
+      _id
+      id
+      name
+      userId
+      owner
+      publishedDate
+    }
   }
 `;
 
 export const messageOneQuery = gql`
   query MessageOneQuery($id: ID!) {
     message(id: $id) {
-        id
-        channelId
-        userId
-        conversationText
-        translateText
-        timestamp
-        metadata
-        isAudioRecord
-        publishedDate
+      id
+      channelId
+      userId
+      conversationText
+      translateText
+      timestamp
+      metadata
+      isAudioRecord
+      publishedDate
+    }
+  }
+`;
+
+export const userManyQuery = gql ` 
+  query UserManyQuery($filter: SearchInput!) {
+    user_many(filter: $filter){
+      userId
+      username
+      password
+      publishedDate
+    }
+  }
+`;
+
+export const channelManyQuery = gql `
+  query ChannelManyQuery($filter: SearchInput!) {
+    channel_many(filter: $filter) {
+      _id
+      id
+      name
+      userId
+      owner
+      publishedDate
+    }
+  }
+`;
+
+export const messageManyQuery = gql`
+  query MessageManyQuery($filter: SearchInput!) {
+    message_many(filter: $filter) {
+      id
+      channelId
+      userId
+      conversationText
+      translateText
+      timestamp
+      metadata
+      isAudioRecord
+      publishedDate
     }
   }
 `;

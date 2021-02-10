@@ -13,12 +13,12 @@ import React from 'react';
 import { channelOneQuery, channelUpdateQuery } from '../../api/graph-queries';
 
 const ChannelEditDialog = (props) => {
-  const { open, setOpen, selectedChannelIds } = props;
+  const { open, setOpen, selectedChannelIds, callback } = props;
   const { loading, error, data } = useQuery(channelOneQuery, {
     variables: { id: selectedChannelIds[0] },
     skip: selectedChannelIds.length < 1
   });
-  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(channelUpdateQuery);
+  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(channelUpdateQuery, {errorPolicy: 'all'});
   const [channelName, setChannelName] = React.useState('');
   const [owner, setOwner] = React.useState('');
 
@@ -30,7 +30,7 @@ const ChannelEditDialog = (props) => {
   }, [data])
 
   if (loading || loadingM) return 'Loading...';
-  if (called) return 'Called...';
+  //if (called) return 'Called...';
   if (error) return `Error! ${error.message}`;
   if (errorM) return `ErrorM! ${errorM.message}`;
 
@@ -49,6 +49,7 @@ const ChannelEditDialog = (props) => {
     delete channelValue._id;
 
     handleEditFragment({ variables: { _id: selectedChannelIds[0], channel: channelValue } });
+    callback();
     setOpen(false);
   };
 

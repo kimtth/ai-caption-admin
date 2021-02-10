@@ -5,6 +5,7 @@ import Page from 'src/components/Page';
 import { usersQuery } from '../../../api/graph-queries';
 import Results from './Results';
 import Toolbar from './Toolbar';
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,11 +20,16 @@ const UserListView = () => {
   const classes = useStyles();
   const { loading, error, data } = useQuery(usersQuery);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const navigate = useNavigate()
 
   if (loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
 
   const users = data ? data.users : [];
+
+  const handleReload = () => {
+    navigate(0);
+  }
 
   return (
     <Page
@@ -32,6 +38,7 @@ const UserListView = () => {
     >
       <Container maxWidth={false}>
         <Toolbar
+          callback={handleReload}
           selectedUserIds={selectedUserIds}
         />
         <Box mt={3}>

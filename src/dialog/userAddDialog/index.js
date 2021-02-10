@@ -9,15 +9,14 @@ import React from 'react';
 import { userCreateQuery } from '../../api/graph-queries';
 
 const UserAddDialog = (props) => {
-  const { open, setOpen } = props;
-  const [handleAddFragment, { loadingM, errorM, dataM, called }] = useMutation(userCreateQuery);
+  const { open, setOpen, callback } = props;
+  const [handleAddFragment, { loading, error, data, called }] = useMutation(userCreateQuery, { errorPolicy: 'all' });
   const [userId, setUserId] = React.useState('');
   const [userName, setUserName] = React.useState('');
   const [passWord, setPassword] = React.useState('');
 
-  if (loadingM) return 'Loading...';
-  if (called) return 'Called...';
-  if (errorM) return `Error! ${errorM.message}`;
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error}`;
 
   const handleClose = () => {
     setOpen(false);
@@ -34,6 +33,7 @@ const UserAddDialog = (props) => {
     delete userValue._id;
 
     handleAddFragment({ variables: { user: userValue } });
+    callback();
     setOpen(false);
   };
 

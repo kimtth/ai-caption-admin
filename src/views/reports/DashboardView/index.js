@@ -1,15 +1,11 @@
-import {
-  Container,
-  Grid,
-  makeStyles
-} from '@material-ui/core';
+import { Container, Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
 import Page from 'src/components/Page';
 import Budget from './Budget';
-import Sales from './Sales';
-import TasksProgress from './TasksProgress';
-import TotalCustomers from './TotalCustomers';
-import TotalProfit from './TotalProfit';
+import Sales from './Traffics';
+import TasksProgress from './TasksLearning';
+import TotalUsers from './TotalUsers';
+import TotalChannel from './TotalChannel';
 import TrafficByDevice from './TrafficByDevice';
 
 const useStyles = makeStyles((theme) => ({
@@ -50,7 +46,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalCustomers />
+            <TotalUsers />
           </Grid>
           <Grid
             item
@@ -68,7 +64,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalProfit />
+            <TotalChannel />
           </Grid>
           <Grid
             item

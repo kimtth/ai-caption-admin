@@ -5,25 +5,29 @@ import { Box, Button, Card, CardContent, Grid, TextField, InputAdornment, SvgIco
 import { Search as SearchIcon } from 'react-feather';
 import MessageDeleteDialog from '../../../dialog/messageDeleteDialog';
 import MessageEditDialog from '../../../dialog/messageEditDialog';
+import { InputLabel, MenuItem, FormControl, Select } from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
   basicButton: {
     marginRight: theme.spacing(1)
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 150,
+  },
 }));
 
-const Toolbar = ({ className, selectedMessageIds, ...rest }) => {
+const Toolbar = ({ className, selectedMessageIds, callback, ...rest }) => {
   const classes = useStyles();
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
+  const [searchCriteria, setSearchCriteria] = React.useState('conversationText');
 
   const handleClickEditOpen = (open) => {
     if (selectedMessageIds?.length > 1) {
-      // eslint-disable-next-line
       alert('please select only one item.');
     } else if (selectedMessageIds?.length === 0) {
-      // eslint-disable-next-line
       alert('please select an item.');
     } else {
       setEditOpen(open);
@@ -32,12 +36,15 @@ const Toolbar = ({ className, selectedMessageIds, ...rest }) => {
 
   const handleClickDeleteOpen = (open) => {
     if (selectedMessageIds?.length === 0) {
-      // eslint-disable-next-line
       alert('please select an item.');
     } else {
       setDeleteOpen(open);
     }
   };
+
+  const handleSelectChange = (e) => {
+    setSearchCriteria(e.target.value);
+  }
 
   return (
     <div
@@ -46,11 +53,13 @@ const Toolbar = ({ className, selectedMessageIds, ...rest }) => {
     >
       <MessageDeleteDialog
         open={deleteOpen}
+        callback={callback}
         setOpen={handleClickDeleteOpen}
         selectedMessageIds={selectedMessageIds}
       />
       <MessageEditDialog
         open={editOpen}
+        callback={callback}
         setOpen={handleClickEditOpen}
         selectedMessageIds={selectedMessageIds}
       />
@@ -83,7 +92,26 @@ const Toolbar = ({ className, selectedMessageIds, ...rest }) => {
                 justify="center"
                 alignItems="center"
               >
-                <Grid item xs={11} style={{ paddingRight: 10 }}>
+                <Grid item xs={2}>
+                  <FormControl variant="outlined" className={classes.formControl}>
+                    <InputLabel id="simple-select-helper-label">Search Criteria</InputLabel>
+                    <Select
+                      labelId="simple-select-helper-label"
+                      id="simple-select-helper"
+                      value={searchCriteria}
+                      onChange={handleSelectChange}
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={'channelId'}>Channel Id</MenuItem>
+                      <MenuItem value={'userId'}>User Id</MenuItem>
+                      <MenuItem value={'conversationText'}>Recognized</MenuItem>
+                      <MenuItem value={'translateText'}>Translate</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={9} style={{ paddingRight: 10 }}>
                   <TextField
                     fullWidth
                     InputProps={{

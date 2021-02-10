@@ -2,25 +2,15 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  useTheme,
-  makeStyles,
-  colors
-} from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import ArrowRightIcon from '@material-ui/icons/ArrowRight';
+import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, makeStyles, colors } from '@material-ui/core';
+// import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+// import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const Sales = ({ className, ...rest }) => {
+const Traffics = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -103,14 +93,14 @@ const Sales = ({ className, ...rest }) => {
       <CardHeader
         action={(
           <Button
-            endIcon={<ArrowDropDownIcon />}
+            // endIcon={<ArrowDropDownIcon />}
             size="small"
             variant="text"
           >
             Last 7 days
           </Button>
         )}
-        title="Latest Sales"
+        title="Latest Traffics"
       />
       <Divider />
       <CardContent>
@@ -132,7 +122,7 @@ const Sales = ({ className, ...rest }) => {
       >
         <Button
           color="primary"
-          endIcon={<ArrowRightIcon />}
+          // endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
         >
@@ -143,8 +133,8 @@ const Sales = ({ className, ...rest }) => {
   );
 };
 
-Sales.propTypes = {
+Traffics.propTypes = {
   className: PropTypes.string
 };
 
-export default Sales;
+export default Traffics;
