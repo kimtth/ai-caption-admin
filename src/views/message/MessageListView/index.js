@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks';
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import { messagesQuery } from '../../../api/graph-queries';
+import { messagesQuery, messageManyQuery } from '../../../api/graph-queries';
 import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -18,17 +18,31 @@ const useStyles = makeStyles((theme) => ({
 
 const MessageListView = () => {
   const classes = useStyles();
+  const [filterOn, setFilterOn] = useState(false);
+  const [filter, setFilter] = useState({
+    criteria: '',
+    keyword: ''
+  })
   const { loading, error, data } = useQuery(messagesQuery);
+  const { loading: loadingMany, error: errorMany, data: dataMany } = useQuery(messageManyQuery, {
+    variables: { filter: filter },
+    skip: filterOn === false
+  });
   const [selectedMessageIds, setSelectedMessageIds] = useState([]);
   const navigate = useNavigate()
 
-  if (loading) return 'Loading...';
+  if (loading || loadingMany) return 'Loading...';
   if (error) return `Error! ${error.message}`;
+  if (errorMany) return `Error! ${errorMany.message}`;
 
-  const messages = data ? data.messages : [];
+  let listData = []
+  if (filterOn) {
+    listData = dataMany ? dataMany.message_many : [];
+  } else {
+    listData = data ? data.messages : [];
+  }
 
   const handleReload = () => {
-    // navigate('/app/message', { replace: true });
     navigate(0);
   }
 
@@ -40,11 +54,13 @@ const MessageListView = () => {
       <Container maxWidth={false}>
         <Toolbar
           callback={handleReload}
+          setFilter={setFilter}
+          setFilterOn={setFilterOn}
           selectedMessageIds={selectedMessageIds}
         />
         <Box mt={3}>
           <Results
-            messages={messages}
+            messages={listData}
             selectedMessageIds={selectedMessageIds}
             setSelectedMessageIds={setSelectedMessageIds}
           />

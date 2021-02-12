@@ -18,11 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, selectedMessageIds, callback, ...rest }) => {
+const Toolbar = ({ className, selectedMessageIds, setFilter, setFilterOn, callback, ...rest }) => {
   const classes = useStyles();
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [searchCriteria, setSearchCriteria] = React.useState('conversationText');
+  const [searchKeyword, setSearchKeyword] = React.useState('');
 
   const handleClickEditOpen = (open) => {
     if (selectedMessageIds?.length > 1) {
@@ -44,6 +45,23 @@ const Toolbar = ({ className, selectedMessageIds, callback, ...rest }) => {
 
   const handleSelectChange = (e) => {
     setSearchCriteria(e.target.value);
+  }
+
+  const handleSearchKeyword = (e) => {
+    setSearchKeyword(e.target.value);
+  }
+
+  const handleSearchButton = (e) =>{
+    setFilter({
+      criteria: searchCriteria,
+      keyword: searchKeyword
+    })
+
+    if(searchCriteria){
+      setFilterOn(true);
+    } else {
+      setFilterOn(false);
+    }
   }
 
   return (
@@ -128,12 +146,14 @@ const Toolbar = ({ className, selectedMessageIds, callback, ...rest }) => {
                     }}
                     placeholder="Search message"
                     variant="outlined"
+                    onChange={handleSearchKeyword}
                   />
                 </Grid>
                 <Grid item xs={1}>
                   <Button
                     color="primary"
                     variant="contained"
+                    onClick={handleSearchButton}
                   >
                     Search
                   </Button>

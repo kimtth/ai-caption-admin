@@ -19,12 +19,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, selectedUserIds, callback, ...rest }) => {
+const Toolbar = ({ className, selectedUserIds, setFilter, setFilterOn, callback, ...rest }) => {
   const classes = useStyles();
   const [addOpen, setAddOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [searchCriteria, setSearchCriteria] = React.useState('userId');
+  const [searchKeyword, setSearchKeyword] = React.useState('');
 
   const handleClickAddOpen = (open) => {
     setAddOpen(open);
@@ -50,6 +51,23 @@ const Toolbar = ({ className, selectedUserIds, callback, ...rest }) => {
 
   const handleSelectChange = (e) => {
     setSearchCriteria(e.target.value);
+  }
+
+  const handleSearchKeyword = (e) => {
+    setSearchKeyword(e.target.value);
+  }
+
+  const handleSearchButton = (e) =>{
+    setFilter({
+      criteria: searchCriteria,
+      keyword: searchKeyword
+    })
+
+    if(searchCriteria){
+      setFilterOn(true);
+    } else {
+      setFilterOn(false);
+    }
   }
 
   return (
@@ -144,12 +162,14 @@ const Toolbar = ({ className, selectedUserIds, callback, ...rest }) => {
                     }}
                     placeholder="Search user"
                     variant="outlined"
+                    onChange={handleSearchKeyword}
                   />
                 </Grid>
                 <Grid item xs={1}>
                   <Button
                     color="primary"
                     variant="contained"
+                    onClick={handleSearchButton}
                   >
                     Search
                   </Button>

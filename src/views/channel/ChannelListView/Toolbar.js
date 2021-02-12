@@ -18,11 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, selectedChannelIds, callback, ...rest }) => {
+const Toolbar = ({ className, selectedChannelIds, setFilter, setFilterOn, callback, ...rest }) => {
   const classes = useStyles();
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
   const [searchCriteria, setSearchCriteria] = React.useState('name');
+  const [searchKeyword, setSearchKeyword] = React.useState('');
 
   const handleClickEditOpen = (open) => {
     if (selectedChannelIds?.length > 1) {
@@ -47,6 +48,23 @@ const Toolbar = ({ className, selectedChannelIds, callback, ...rest }) => {
 
   const handleSelectChange = (e) => {
     setSearchCriteria(e.target.value);
+  }
+
+  const handleSearchKeyword = (e) => {
+    setSearchKeyword(e.target.value);
+  }
+
+  const handleSearchButton = (e) =>{
+    setFilter({
+      criteria: searchCriteria,
+      keyword: searchKeyword
+    })
+
+    if(searchCriteria){
+      setFilterOn(true);
+    } else {
+      setFilterOn(false);
+    }
   }
 
   return (
@@ -130,12 +148,14 @@ const Toolbar = ({ className, selectedChannelIds, callback, ...rest }) => {
                     }}
                     placeholder="Search channel"
                     variant="outlined"
+                    onChange={handleSearchKeyword}
                   />
                 </Grid>
                 <Grid item xs={1}>
                   <Button
                     color="primary"
                     variant="contained"
+                    onClick={handleSearchButton}
                   >
                     Search
                   </Button>
