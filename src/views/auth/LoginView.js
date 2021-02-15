@@ -1,9 +1,8 @@
 import { Box, Button, Container, makeStyles, TextField, Typography } from '@material-ui/core';
-import { Formik } from 'formik';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import { isLoggedIn, setAuth } from 'src/api/Constants';
 import Page from 'src/components/Page';
-import * as Yup from 'yup';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,9 +13,17 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const LoginView = () => {
+const LoginView = (props) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [user, setUser] = React.useState({ userId: "", password: "" });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(isLoggedIn)
+    setAuth(true);
+    navigate('/app/dashboard', { replace: true });
+  }
 
   return (
     <Page
@@ -30,97 +37,76 @@ const LoginView = () => {
         justifyContent="center"
       >
         <Container maxWidth="sm">
-          <Formik
-            initialValues={{
-              email: 'demo@devias.io',
-              password: 'Password123'
-            }}
-            validationSchema={Yup.object().shape({
-              email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              password: Yup.string().max(255).required('Password is required')
-            })}
-            onSubmit={() => {
-              navigate('/app/dashboard', { replace: true });
-            }}
+          <Box mb={3}>
+            <Typography
+              color="textPrimary"
+              variant="h2"
+            >
+              Sign in
+                  </Typography>
+            <Typography
+              color="textSecondary"
+              gutterBottom
+              variant="body2"
+            >
+              TCS AI-Caption Portal
+                  </Typography>
+          </Box>
+          <Box
+            mt={3}
+            mb={1}
           >
-            {({
-              errors,
-              handleBlur,
-              handleChange,
-              handleSubmit,
-              isSubmitting,
-              touched,
-              values
-            }) => (
-              <form onSubmit={handleSubmit}>
-                <Box mb={3}>
-                  <Typography
-                    color="textPrimary"
-                    variant="h2"
-                  >
-                    Sign in
+            <Typography
+              align="center"
+              color="textSecondary"
+              variant="body1"
+            >
+              Login with email address
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    gutterBottom
-                    variant="body2"
-                  >
-                    Sign in on the internal platform
-                  </Typography>
-                </Box>
-                <Box
-                  mt={3}
-                  mb={1}
-                >
-                  <Typography
-                    align="center"
-                    color="textSecondary"
-                    variant="body1"
-                  >
-                    Login with email address
-                  </Typography>
-                </Box>
-                <TextField
-                  error={Boolean(touched.email && errors.email)}
-                  fullWidth
-                  helperText={touched.email && errors.email}
-                  label="Email Address"
-                  margin="normal"
-                  name="email"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="email"
-                  value={values.email}
-                  variant="outlined"
-                />
-                <TextField
-                  error={Boolean(touched.password && errors.password)}
-                  fullWidth
-                  helperText={touched.password && errors.password}
-                  label="Password"
-                  margin="normal"
-                  name="password"
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  type="password"
-                  value={values.password}
-                  variant="outlined"
-                />
-                <Box my={2}>
-                  <Button
-                    color="primary"
-                    disabled={isSubmitting}
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                  >
-                    Sign in now
-                  </Button>
-                </Box>
-              </form>
-            )}
-          </Formik>
+          </Box>
+          <TextField
+            fullWidth
+            label="Email Address"
+            margin="normal"
+            name="email"
+            onChange={(event) =>
+              setUser({
+                ...user,
+                [event.target.name]: event.target.value,
+              })
+            }
+            type="email"
+            value={user.userId}
+            variant="outlined"
+          />
+          <TextField
+            fullWidth
+            label="Password"
+            margin="normal"
+            name="password"
+            onChange={(event) =>
+              setUser({
+                ...user,
+                [event.target.name]: event.target.value,
+              })
+            }
+            type="password"
+            value={user.password}
+            variant="outlined"
+            autoComplete="off"
+          />
+          <Box my={2}>
+            <Button
+              color="primary"
+              fullWidth
+              size="large"
+              type="button"
+              variant="contained"
+              onClick={handleSubmit}
+            >
+              Sign in
+              </Button>
+          </Box>
         </Container>
       </Box>
     </Page>

@@ -1,7 +1,8 @@
 import { ApolloClient, InMemoryCache } from '@apollo/client';
+import { API_ENDPOINT } from './Constants'
 
 const client = new ApolloClient({
-  uri: 'http://localhost:8081/graphql',
+  uri: API_ENDPOINT,
   cache: new InMemoryCache(),
   defaultOptions: { query: { fetchPolicy: 'no-cache' } }
 });

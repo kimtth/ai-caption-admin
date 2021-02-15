@@ -1,17 +1,16 @@
-import 'react-perfect-scrollbar/dist/css/styles.css';
-import React from 'react';
-import { useRoutes } from 'react-router-dom';
+import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core';
+import React from 'react';
+import 'react-perfect-scrollbar/dist/css/styles.css';
+import { useRoutes } from 'react-router-dom';
+import { isLoggedIn } from 'src/api/Constants';
 import GlobalStyles from 'src/components/GlobalStyles';
 import 'src/mixins/chartjs';
-import theme from 'src/theme';
 import routes from 'src/routes';
-import { ApolloProvider } from '@apollo/client';
+import theme from 'src/theme';
 import client from './api/apollo-client';
 
 const App = () => {
-  //const { isLoggedIn } = React.useSelector((state) => state.auth);
-  const isLoggedIn = true;
   const routing = useRoutes(routes(isLoggedIn));
 
   return (

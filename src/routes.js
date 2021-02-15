@@ -11,7 +11,7 @@ import NotFoundView from 'src/views/errors/NotFoundView';
 import DashboardView from 'src/views/reports/DashboardView';
 import SettingsView from 'src/views/settings/SettingsView';
 
-const routes = (isLoggedIn) => [
+const routes = (isLoggedIn, setLoggedIn) => [
   {
     path: 'app',
     element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
@@ -29,7 +29,7 @@ const routes = (isLoggedIn) => [
     path: '/',
     element: <MainLayout />,
     children: [
-      { path: 'login', element: isLoggedIn ? <Navigate to="/" /> : <LoginView /> },
+      { path: 'login', element: isLoggedIn ? <Navigate to="/" /> : <LoginView setLoggedIn={setLoggedIn}/> },
       { path: '404', element: <NotFoundView /> },
       { path: '/', element: <Navigate to="/app/dashboard" /> },
       { path: '*', element: <Navigate to="/404" /> }
