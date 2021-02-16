@@ -13,7 +13,8 @@ const mongoose = require('mongoose');
 const cors = require('@koa/cors');
 const api = require('./core');
 const { typeDefs, resolvers } = require('./core/api/apollo-def')
-const { ApolloServer } = require('apollo-server-koa');
+const { ApolloServer, ApolloError } = require('apollo-server-koa');
+const { jwtGetUser, jwtMiddleware } = require('./core/api/lib/jwtMiddleware');
 
 const corsOptionsDev = {
    origin: 'http://localhost:3000',
@@ -26,6 +27,7 @@ if (process.env.NODE_ENV !== 'production') {
    app.use(cors());
 }
 app.use(BodyParser()); //Kim: Bodyparser should be set before router.
+app.use(jwtMiddleware);
 
 const static_pages = new Koa();
 static_pages.use(serve(__dirname + "/build")); //serve the build directory
@@ -41,7 +43,17 @@ if (process.env.NODE_ENV !== 'production') { //development
     port = 8081;
 }
 
-const apollo = new ApolloServer({ typeDefs, resolvers });
+const apollo = new ApolloServer({ 
+  typeDefs, 
+  resolvers,
+  context: ({ctx}) => {
+    const token = ctx.request.header.authorization;
+    console.log(token, ctx.request);
+    const userId = jwtGetUser(token);
+    if (!userId) throw new ApolloError('you must be logged in');
+    return { userId };
+  }
+});
 app.use(apollo.getMiddleware());
 const server = require('http').createServer(app.callback())
  

@@ -1,51 +1,8 @@
-const Joi = require('joi');
 const User = require('../models/user');
-
-/*
-  POST /api/auth/register
-*/
-exports.register = async (ctx) => {
-  const schema = Joi.object().keys({
-    userId: Joi.string().alphanum().min(3).max(20).required(),
-    password: Joi.string().required(),
-  });
-  const result = schema.validate(ctx.request.body);
-  if (result.error) {
-    ctx.status = 400;
-    ctx.body = result.error;
-    return;
-  }
-
-  const { userId, password } = ctx.request.body;
-  try {
-    const exists = await User.findByUserId(userId);
-    if (exists) {
-      ctx.status = 409; // Conflict
-      return;
-    }
-
-    const user = new User({
-      userId,
-    });
-    await user.setPassword(password); // 비밀번호 설정
-    await user.save(); // 데이터베이스에 저장
-
-    ctx.body = user.serialize();
-
-    const token = user.generateToken();
-    ctx.cookies.set('access_token', token, {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7일
-      httpOnly: true,
-    });
-  } catch (e) {
-    ctx.throw(500, e);
-  }
-};
-
 /*
   POST /api/auth/login
   {
-    userId: 'velopert',
+    userId: 'captionuser',
     password: 'mypass123'
   }
 */
@@ -58,7 +15,7 @@ exports.login = async (ctx) => {
   }
 
   try {
-    const user = await User.findByUserId(userId);
+    const user = await User.findOne({ userId: userId });
     if (!user) {
       ctx.status = 401;
       return;
@@ -72,23 +29,13 @@ exports.login = async (ctx) => {
     const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
       maxAge: 1000 * 60 * 60 * 24 * 7, // 7days
-      httpOnly: true, //Kim: Very Important!
+      httpOnly: true, //Kim: Very Important!:
+      // The httpOnly: true setting means that the cookie can’t be read using JavaScript 
+      // but can still be sent back to the server in HTTP requests.
     });
   } catch (e) {
     ctx.throw(500, e);
   }
-};
-
-/*
-  GET /api/auth/check
-*/
-exports.check = async (ctx) => {
-  const { user } = ctx.state;
-  if (!user) {
-    ctx.status = 401; // Unauthorized
-    return;
-  }
-  ctx.body = user;
 };
 
 /*

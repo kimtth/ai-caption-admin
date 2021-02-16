@@ -1,4 +1,5 @@
-const fs = require('fs')
+const fs = require('fs');
+const Joi = require('joi');
 const { gql, ApolloError } = require('apollo-server-koa');
 const User = require('../models/user');
 const Channel = require('../models/channel');
@@ -13,37 +14,44 @@ const resolvers = {
   Query: {
     hello: async () => await 'Hello world!',
     user: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const { userId } = args;
       const user = await User.findOne({ userId: userId });
       if (user) {
         return user
       }
     },
-    users: async () => {
+    users: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const users = await User.find();
       if (users) {
         return users
       }
     },
     channel: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const { _id } = args;
       const channel = await Channel.findById(_id);
       return channel
     },
-    channels: async () => {
+    channels: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const channels = await Channel.find();
       return channels
     },
     message: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const { id } = args;
       const message = await Message.findOne({ id: id });
       return message
     },
-    messages: async () => {
+    messages: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       const messages = await Message.find();
       return messages
     },
     channel_many: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       try {
         const { filter } = args;
         const { criteria, keyword } = filter;
@@ -85,6 +93,7 @@ const resolvers = {
       */
     },
     message_many: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       try {
         const { filter } = args;
         const { criteria, keyword } = filter;
@@ -111,6 +120,7 @@ const resolvers = {
       }
     },
     user_many: async (parent, args, context, info) => {
+      if (!context.userId) return null;
       try {
         const { filter } = args;
         const { criteria, keyword } = filter;
@@ -133,8 +143,19 @@ const resolvers = {
   },
   Mutation: {
     createUser: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { user } = args;
       const { password } = user
+
+      const schema = Joi.object().keys({
+        userId: Joi.string().alphanum().min(3).max(20).required(),
+        password: Joi.string().required(),
+      });
+      const result = schema.validate(user);
+      if (result.error) {
+        throw new ApolloError(result.error, 'ERROR', {});
+      }
+
       try {
         const new_user = await new User(user);
         await new_user.setPassword(password)
@@ -145,6 +166,7 @@ const resolvers = {
       }
     },
     updateUser: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { userId, user } = args;
       const update_user = await User.findOneAndUpdate(
         { userId: userId },
@@ -156,6 +178,7 @@ const resolvers = {
       return update_user.serialize();
     },
     updateChannel: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { _id, channel } = args;
       const update_channel = await Channel.findByIdAndUpdate(
         _id,
@@ -167,6 +190,7 @@ const resolvers = {
       return update_channel;
     },
     updateMessage: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { id, message } = args
       const update_message = await Message.findOneAndUpdate(
         { id: id },
@@ -178,6 +202,7 @@ const resolvers = {
       return update_message;
     },
     deleteUsers: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { userIds } = args
       console.log(userIds)
       let users = []
@@ -188,6 +213,7 @@ const resolvers = {
       return users;
     },
     deleteChannels: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { _ids } = args
       let channels = []
       _ids.forEach(async _id => {
@@ -197,6 +223,7 @@ const resolvers = {
       return channels;
     },
     deleteMessages: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { ids } = args
       let messages = []
       ids.forEach(async id => {

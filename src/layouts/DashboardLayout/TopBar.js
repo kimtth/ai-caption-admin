@@ -8,6 +8,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { isLoggedIn, setAuth } from 'src/api/Constants';
 import Logo from 'src/components/Logo';
 import { useNavigate } from 'react-router-dom';
+import { logout } from 'src/api/auth-client'
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -21,10 +22,13 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const classes = useStyles();
   const navigate = useNavigate();
 
-  const onSignOut = () => {
+  const onSignOut = (e) => {
+    e.preventDefault();
     console.log('sign-out');
-    setAuth(false);
-    navigate('/', { replace: true });
+    if(logout()){
+      setAuth(false);
+      navigate('/', { replace: true });
+    }
   }
 
   return (

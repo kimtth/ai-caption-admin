@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { isLoggedIn, setAuth } from 'src/api/Constants';
 import Page from 'src/components/Page';
+import { login } from 'src/api/auth-client'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,11 +19,16 @@ const LoginView = (props) => {
   const navigate = useNavigate();
   const [user, setUser] = React.useState({ userId: "", password: "" });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(isLoggedIn)
-    setAuth(true);
-    navigate('/app/dashboard', { replace: true });
+    const proceed = await login(user);
+    if(proceed){
+      setAuth(true);
+      navigate('/app/dashboard', { replace: true });
+    } else {
+      alert('Authentication required');
+    }
+    setUser({ userId: "", password: "" })
   }
 
   return (
@@ -68,7 +74,7 @@ const LoginView = (props) => {
             fullWidth
             label="Email Address"
             margin="normal"
-            name="email"
+            name="userId"
             onChange={(event) =>
               setUser({
                 ...user,
