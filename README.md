@@ -2,7 +2,7 @@
 
 ![license](https://img.shields.io/badge/license-MIT-blue.svg)
 
-[![React Material Dashboard](./docs/dashboard.png)](https://react-material-dashboard.devias.io/)
+![React Material Dashboard](./docs/dashboard.PNG) https://react-material-dashboard.devias.io/
 
 > Free React Dashboard made with [Material UI's](https://material-ui.com/?ref=devias-io) components, [React](https://reactjs.org/?ref=devias-io) and [create-react-app](https://facebook.github.io/create-react-app/?ref=devias-io) process!
 
