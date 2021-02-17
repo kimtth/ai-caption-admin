@@ -1,15 +1,15 @@
 import { createAction, handleActions } from 'redux-actions'
 
-const LOGGEDIN = 'sign/LOGIN';
-export const setLoggedIn = createAction(LOGGEDIN);
+const USERID = 'user/USERID';
+export const setUserId = createAction(USERID);
 
 const initialState = {
-    loggedin: false
+    userId: ''
 }
 
 export const metas = handleActions(
     {
-        [LOGGEDIN]: (state) => ({ ...state, loggedin: !state.loggedin }),
+        [USERID]: (state, { payload: userId }) => ({ ...state, userId: userId }),
     },
     initialState,
 )

@@ -10,9 +10,6 @@ export async function login(user) {
     body: JSON.stringify({ userId, password }),
     credentials: 'include'
   });
-  if (response.ok) {
-    Cookies.set('signedin', true);
-  }
   return response.ok;
 }
 
@@ -21,8 +18,5 @@ export async function logout() {
     method: 'POST',
     credentials: 'include'
   });
-  if (response.ok) {
-    Cookies.remove("signedin");
-  }
   return response.ok;
 }

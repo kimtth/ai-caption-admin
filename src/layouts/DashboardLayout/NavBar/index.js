@@ -12,11 +12,6 @@ const items = [
     title: 'Dashboard'
   },
   {
-    href: '/app/speech',
-    icon: Voicemail,
-    title: 'Custom Speech'
-  },
-  {
     href: '/app/user',
     icon: UserIcon,
     title: 'Users'
@@ -30,6 +25,11 @@ const items = [
     href: '/app/message',
     icon: MessageIcon,
     title: 'Messages'
+  },
+  {
+    href: '/app/speech',
+    icon: Voicemail,
+    title: 'Custom'
   },
   {
     href: '/app/settings',

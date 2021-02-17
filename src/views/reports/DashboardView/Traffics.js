@@ -16,16 +16,16 @@ const Traffics = ({ className, ...rest }) => {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: [18, 5, 19, 27, 29, 19, 20],
-        label: 'This year'
+        data: [18, 5, 19, 27, 29, 19, 20, 18, 5, 19, 27, 29, 19, 20],
+        label: 'This month'
       },
       {
         backgroundColor: colors.grey[200],
-        data: [11, 20, 12, 29, 30, 25, 13],
-        label: 'Last year'
+        data: [11, 20, 12, 29, 30, 25, 13, 18, 5, 19, 27, 29, 19, 20],
+        label: 'Last month'
       }
     ],
-    labels: ['1 Aug', '2 Aug', '3 Aug', '4 Aug', '5 Aug', '6 Aug']
+    labels: ['D-13', 'D-12', 'D-11', 'D-10', 'D-09', 'D-08', 'D-07', 'D-06', 'D-05', 'D-04', 'D-03', 'D-02', 'D-01', 'Today']
   };
 
   const options = {
@@ -94,10 +94,10 @@ const Traffics = ({ className, ...rest }) => {
             size="small"
             variant="text"
           >
-            Last 7 days
+            Last 14 days
           </Button>
         )}
-        title="Latest Traffics"
+        title="Latest Traffics (Count of message)"
       />
       <Divider />
       <CardContent>
@@ -117,13 +117,6 @@ const Traffics = ({ className, ...rest }) => {
         justifyContent="flex-end"
         p={2}
       >
-        <Button
-          color="primary"
-          size="small"
-          variant="text"
-        >
-          Overview
-        </Button>
       </Box>
     </Card>
   );

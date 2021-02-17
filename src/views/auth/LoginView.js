@@ -1,9 +1,11 @@
 import { Box, Button, Container, makeStyles, TextField, Typography } from '@material-ui/core';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { login } from 'src/api/auth-client';
-import Page from 'src/components/Page';
 import { setAuth } from 'src/api/inMemoryAuth';
+import Page from 'src/components/Page';
+import { setUserId } from 'src/context/metaContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,11 +21,15 @@ const LoginView = (props) => {
   const navigate = useNavigate();
   const [user, setUser] = React.useState({ userId: "", password: "" });
 
+  const dispatch = useDispatch();
+  const onUserId = React.useCallback((value) => dispatch(setUserId(value)), [dispatch]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const proceed = await login(user);
     if(proceed){
       setAuth(true);
+      onUserId(user.userId);
       navigate('/app/dashboard', { replace: true });
     } else {
       alert('Authentication required');

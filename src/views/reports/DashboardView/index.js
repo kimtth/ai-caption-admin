@@ -6,7 +6,7 @@ import Sales from './Traffics';
 import TasksProgress from './TasksLearning';
 import TotalUsers from './TotalUsers';
 import TotalChannel from './TotalChannel';
-import TrafficByDevice from './TrafficByDevice';
+import AudioRecord from './AudioRecord';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -82,7 +82,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TrafficByDevice />
+            <AudioRecord />
           </Grid>
         </Grid>
       </Container>

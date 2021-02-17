@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Avatar, Card, CardContent, Grid, Typography, makeStyles, colors } from '@material-ui/core';
-import AttachMoneyIcon from '@material-ui/icons/AttachMoney';
+import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -46,7 +46,7 @@ const TotalChannel = ({ className, ...rest }) => {
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>
-              <AttachMoneyIcon />
+              <MeetingRoomIcon />
             </Avatar>
           </Grid>
         </Grid>

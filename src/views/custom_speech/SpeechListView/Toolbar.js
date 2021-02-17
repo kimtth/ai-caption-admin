@@ -28,7 +28,7 @@ const Toolbar = ({ className, ...rest }) => {
           variant="contained"
           className={classes.basicButton}
         >
-          Delete
+          Export
         </Button>
         <Button
           color="primary"

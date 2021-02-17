@@ -52,10 +52,6 @@ const UserEditDialog = (props) => {
     setUserName(evt.target.value);
   }
 
-  const handlePasswordChange = (evt) => {
-    setPassword(evt.target.value);
-  }
-
   return (
     <div>
       <Dialog open={open} onClose={handleClose} fullWidth aria-labelledby="form-dialog-title">
@@ -123,7 +119,8 @@ const UserEditDialog = (props) => {
                   variant="outlined"
                   fullWidth
                   value={passWord}
-                  onChange={handlePasswordChange}
+                  disabled
+                  // onChange={handlePasswordChange}
                 />
               </Grid>
             </Grid>

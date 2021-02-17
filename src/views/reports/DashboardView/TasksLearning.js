@@ -35,13 +35,13 @@ const TasksLearning = ({ className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              LEARNING / TOTAL (%)
+              CUSTOM / TOTAL (%)
             </Typography>
             <Typography
               color="textPrimary"
               variant="h3"
             >
-              75.5%
+              15.5%
             </Typography>
           </Grid>
           <Grid item>
@@ -52,7 +52,7 @@ const TasksLearning = ({ className, ...rest }) => {
         </Grid>
         <Box mt={3}>
           <LinearProgress
-            value={75.5}
+            value={15.5}
             variant="determinate"
           />
         </Box>

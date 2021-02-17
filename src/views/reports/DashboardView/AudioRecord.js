@@ -1,11 +1,10 @@
-import React from 'react';
+import { Box, Card, CardContent, CardHeader, colors, Divider, makeStyles, Typography, useTheme } from '@material-ui/core';
+import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
+import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
+import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
-import { Box, Card, CardContent, CardHeader, Divider, Typography, colors, makeStyles, useTheme } from '@material-ui/core';
-import LaptopMacIcon from '@material-ui/icons/LaptopMac';
-import PhoneIcon from '@material-ui/icons/Phone';
-import TabletIcon from '@material-ui/icons/Tablet';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -13,18 +12,18 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TrafficByDevice = ({ className, ...rest }) => {
+const AudioRecord = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
   const data = {
     datasets: [
       {
-        data: [63, 15, 22],
+        data: [63, 37],
         backgroundColor: [
-          colors.indigo[500],
+          colors.green[500],
           colors.red[600],
-          colors.orange[600]
+          // colors.orange[600]
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
@@ -58,23 +57,17 @@ const TrafficByDevice = ({ className, ...rest }) => {
 
   const devices = [
     {
-      title: 'Desktop',
+      title: 'Audio',
       value: 63,
-      icon: LaptopMacIcon,
+      icon: SettingsVoiceIcon,
       color: colors.indigo[500]
     },
     {
-      title: 'Tablet',
-      value: 15,
-      icon: TabletIcon,
+      title: 'Text',
+      value: 37,
+      icon: FormatColorTextIcon,
       color: colors.red[600]
     },
-    {
-      title: 'Mobile',
-      value: 23,
-      icon: PhoneIcon,
-      color: colors.orange[600]
-    }
   ];
 
   return (
@@ -82,7 +75,7 @@ const TrafficByDevice = ({ className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <CardHeader title="Traffic by Device" />
+      <CardHeader title="Audio / Total (%)" />
       <Divider />
       <CardContent>
         <Box
@@ -132,8 +125,8 @@ const TrafficByDevice = ({ className, ...rest }) => {
   );
 };
 
-TrafficByDevice.propTypes = {
+AudioRecord.propTypes = {
   className: PropTypes.string
 };
 
-export default TrafficByDevice;
+export default AudioRecord;

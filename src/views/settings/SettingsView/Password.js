@@ -1,16 +1,10 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { useQuery } from '@apollo/client';
+import { Card, CardContent, CardHeader, Grid, Divider, makeStyles, TextField, Typography } from '@material-ui/core';
 import clsx from 'clsx';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CardHeader,
-  Divider,
-  TextField,
-  makeStyles
-} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { userOneQuery } from 'src/api/graph-queries';
 
 const useStyles = makeStyles(({
   root: {}
@@ -18,17 +12,20 @@ const useStyles = makeStyles(({
 
 const Password = ({ className, ...rest }) => {
   const classes = useStyles();
-  const [values, setValues] = useState({
-    password: '',
-    confirm: ''
+  const [values, setValues] = useState({});
+  const userId = useSelector(state => state.metas.userId);
+  const { loading, error, data } = useQuery(userOneQuery, {
+    variables: { userId: userId },
+    skip: !userId
   });
 
-  const handleChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]: event.target.value
-    });
-  };
+  React.useEffect(() => {
+    if (data) {
+      setValues(data?.user);
+    }
+  }, [data])
+
+  if (error) return `Error! ${error.message}`;
 
   return (
     <form
@@ -37,45 +34,61 @@ const Password = ({ className, ...rest }) => {
     >
       <Card>
         <CardHeader
-          subheader="Update password"
-          title="Password"
+          title="Settings"
+          subheader="User Profile"
         />
         <Divider />
         <CardContent>
-          <TextField
-            fullWidth
-            label="Password"
-            margin="normal"
-            name="password"
-            onChange={handleChange}
-            type="password"
-            value={values.password}
-            variant="outlined"
-          />
-          <TextField
-            fullWidth
-            label="Confirm password"
-            margin="normal"
-            name="confirm"
-            onChange={handleChange}
-            type="password"
-            value={values.confirm}
-            variant="outlined"
-          />
+          <Grid
+            container
+            justify="center"
+            alignItems="center"
+          >
+            <Grid item xs={1}>
+              <Typography variant="subtitle1">User ID: </Typography>
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                fullWidth
+                label="User Id"
+                margin="normal"
+                name="userid"
+                value={userId}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="subtitle1">User Name: </Typography>
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                fullWidth
+                label="User Name"
+                margin="normal"
+                name="username"
+                value={values.username}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item xs={1}>
+              <Typography variant="subtitle1">Password: </Typography>
+            </Grid>
+            <Grid item xs={11}>
+              <TextField
+                fullWidth
+                label="password"
+                margin="normal"
+                name="password"
+                value={values.password}
+                disabled
+                variant="outlined"
+              />
+            </Grid>
+          </Grid>
         </CardContent>
         <Divider />
-        <Box
-          display="flex"
-          justifyContent="flex-end"
-          p={2}
-        >
-          <Button
-            color="primary"
-            variant="contained"
-          >
-            Update
-          </Button>
-        </Box>
       </Card>
     </form>
   );

@@ -39,7 +39,6 @@
     "chart.js": "^2.9.4",
     "clsx": "^1.1.1",
     "dotenv": "^8.2.0",
-    "formik": "^2.1.5",
     "graphql": "^15.5.0",
     "graphql-tag": "^2.11.0",
     "history": "^5.0.0",
