@@ -47,12 +47,14 @@ const apollo = new ApolloServer({
   typeDefs, 
   resolvers,
   context: ({ctx}) => {
-    const token = ctx.request.header.authorization;
-    console.log(token, ctx.request);
-    const userId = jwtGetUser(token);
-    if (!userId) throw new ApolloError('you must be logged in');
-    return { userId };
-  }
+    const token = ctx.cookies.get('access_token');
+    if(token){
+      const userId = jwtGetUser(token);
+      if (!userId) throw new ApolloError('you must be logged in');
+      return { userId };
+    }
+  },
+  cors: false //already set by koa
 });
 app.use(apollo.getMiddleware());
 const server = require('http').createServer(app.callback())

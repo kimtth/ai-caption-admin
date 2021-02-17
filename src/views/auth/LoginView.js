@@ -1,9 +1,9 @@
 import { Box, Button, Container, makeStyles, TextField, Typography } from '@material-ui/core';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { isLoggedIn, setAuth } from 'src/api/Constants';
+import { login } from 'src/api/auth-client';
 import Page from 'src/components/Page';
-import { login } from 'src/api/auth-client'
+import { setAuth } from 'src/api/inMemoryAuth';
 
 const useStyles = makeStyles((theme) => ({
   root: {

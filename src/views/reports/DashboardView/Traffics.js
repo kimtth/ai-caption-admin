@@ -3,8 +3,6 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, makeStyles, colors } from '@material-ui/core';
-// import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-// import ArrowRightIcon from '@material-ui/icons/ArrowRight';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -38,7 +36,7 @@ const Traffics = ({ className, ...rest }) => {
     maintainAspectRatio: false,
     responsive: true,
     scales: {
-      xAxes: [
+      datasets: [
         {
           barThickness: 12,
           maxBarThickness: 10,
@@ -93,7 +91,6 @@ const Traffics = ({ className, ...rest }) => {
       <CardHeader
         action={(
           <Button
-            // endIcon={<ArrowDropDownIcon />}
             size="small"
             variant="text"
           >
@@ -122,7 +119,6 @@ const Traffics = ({ className, ...rest }) => {
       >
         <Button
           color="primary"
-          // endIcon={<ArrowRightIcon />}
           size="small"
           variant="text"
         >

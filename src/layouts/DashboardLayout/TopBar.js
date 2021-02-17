@@ -4,11 +4,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { isLoggedIn, setAuth } from 'src/api/Constants';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { logout } from 'src/api/auth-client';
 import Logo from 'src/components/Logo';
-import { useNavigate } from 'react-router-dom';
-import { logout } from 'src/api/auth-client'
+import { setAuth } from 'src/api/inMemoryAuth';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -25,8 +24,8 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const onSignOut = (e) => {
     e.preventDefault();
     console.log('sign-out');
+    setAuth(false);
     if(logout()){
-      setAuth(false);
       navigate('/', { replace: true });
     }
   }
