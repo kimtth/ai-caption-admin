@@ -168,14 +168,23 @@ const resolvers = {
     updateUser: async (parent, args, context, info) => {
       if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { userId, user } = args;
-      const update_user = await User.findOneAndUpdate(
+      const { password } = user;
+
+      // Kim: check for already hashed or not.
+      if(!password.startsWith('$2b$10') && password.length < 25){
+        const updated_user = await new User(user);
+        await updated_user.setPassword(password);
+        user.password = updated_user.password;
+      }
+
+      const result = await User.findOneAndUpdate(
         { userId: userId },
         user,
         {
           new: true, //body: updated data
         }
       ).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
-      return update_user.serialize();
+      return result.serialize();
     },
     updateChannel: async (parent, args, context, info) => {
       if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});

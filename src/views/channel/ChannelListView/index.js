@@ -19,14 +19,23 @@ const useStyles = makeStyles((theme) => ({
 const ChannelListView = () => {
   const classes = useStyles();
   const [filterOn, setFilterOn] = useState(false);
+  const [listData, setlistData] = useState([]);
   const [filter, setFilter] = useState({
     criteria: '',
     keyword: ''
   })
-  const { loading, error, data } = useQuery(channelsQuery);
-  const { loading: loadingMany, error: errorMany, data: dataMany } = useQuery(channelManyQuery, {
+  const { loading, error, data, refetch } = useQuery(channelsQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      loadData()
+    }
+  });
+  const { loading: loadingMany, error: errorMany, data: dataMany, refetch: refetchMany } = useQuery(channelManyQuery, {
     variables: { filter: filter },
-    skip: filterOn === false
+    skip: filterOn === false,
+    onCompleted: () => {
+      loadData()
+    }
   });
   const [selectedChannelIds, setSelectedChannelIds] = useState([]);
   const navigate = useNavigate()
@@ -35,16 +44,22 @@ const ChannelListView = () => {
   if (error) return `Error! ${error.message}`;
   if (errorMany) return `Error! ${errorMany.message}`;
 
-  let listData = []
-  if (filterOn) {
-    listData = dataMany ? dataMany.channel_many : [];
-  } else {
-    listData = data ? data.channels : [];
+  const loadData = () => {
+    if (filterOn) {
+      setlistData(dataMany ? dataMany.channel_many : []);
+    } else {
+      setlistData(data ? data.channels : []);
+    }
+    // Kim: I could not find a reason why refreshing of page is not working when only calling a navigate one time.
+    navigate('/app', { replace: true })
+    navigate('/app/channel', { replace: true })
   }
 
-  const handleReload = () => {
-    // navigate('/app/channel', { replace: true });
-    navigate(0);
+  const handleReload = async() => {
+    const rtn = await refetch();
+    if (rtn) {
+      loadData();
+    }
   }
 
   return (

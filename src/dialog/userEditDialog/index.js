@@ -12,7 +12,8 @@ const UserEditDialog = (props) => {
   const { open, setOpen, selectedUserIds, callback } = props;
   const { loading, error, data } = useQuery(userOneQuery, {
     variables: { userId: selectedUserIds[0] },
-    skip: selectedUserIds.length < 1
+    skip: selectedUserIds.length < 1,
+    fetchPolicy: "no-cache"
   });
   const [handleEditFragment, { loading: m_loading, error: m_error, data: m_data, called }] = useMutation(userUpdateQuery, {errorPolicy: 'all'});
   const [userName, setUserName] = React.useState('');
@@ -50,6 +51,10 @@ const UserEditDialog = (props) => {
 
   const handleChange = (evt) => {
     setUserName(evt.target.value);
+  }
+
+  const handlePasswordChange = (evt) => {
+    setPassword(evt.target.value);
   }
 
   return (
@@ -119,8 +124,7 @@ const UserEditDialog = (props) => {
                   variant="outlined"
                   fullWidth
                   value={passWord}
-                  disabled
-                  // onChange={handlePasswordChange}
+                  onChange={handlePasswordChange}
                 />
               </Grid>
             </Grid>

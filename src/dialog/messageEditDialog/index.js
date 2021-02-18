@@ -16,7 +16,8 @@ const MessageEditDialog = (props) => {
   const { open, setOpen, selectedMessageIds, callback } = props;
   const { loading, error, data } = useQuery(messageOneQuery, {
     variables: { id: selectedMessageIds[0] },
-    skip: selectedMessageIds.length < 1
+    skip: selectedMessageIds.length < 1,
+    fetchPolicy: "no-cache"
   });
   const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery, {errorPolicy: 'all'});
   const [conversationText, setConversationText] = React.useState('');

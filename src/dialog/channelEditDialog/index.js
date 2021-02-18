@@ -16,7 +16,8 @@ const ChannelEditDialog = (props) => {
   const { open, setOpen, selectedChannelIds, callback } = props;
   const { loading, error, data } = useQuery(channelOneQuery, {
     variables: { id: selectedChannelIds[0] },
-    skip: selectedChannelIds.length < 1
+    skip: selectedChannelIds.length < 1,
+    fetchPolicy: "no-cache"
   });
   const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(channelUpdateQuery, {errorPolicy: 'all'});
   const [channelName, setChannelName] = React.useState('');

@@ -19,14 +19,23 @@ const useStyles = makeStyles((theme) => ({
 const UserListView = () => {
   const classes = useStyles();
   const [filterOn, setFilterOn] = useState(false);
+  const [listData, setlistData] = useState([]);
   const [filter, setFilter] = useState({
     criteria: '',
     keyword: ''
   })
-  const { loading, error, data } = useQuery(usersQuery);
-  const { loading: loadingMany, error: errorMany, data: dataMany } = useQuery(userManyQuery, {
+  const { loading, error, data, refetch } = useQuery(usersQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      loadData()
+    }
+  });
+  const { loading: loadingMany, error: errorMany, data: dataMany, refetch: refetchMany } = useQuery(userManyQuery, {
     variables: { filter: filter },
-    skip: filterOn === false
+    skip: filterOn === false,
+    onCompleted: () => {
+      loadData()
+    }
   });
   const [selectedUserIds, setSelectedUserIds] = useState([]);
   const navigate = useNavigate()
@@ -35,15 +44,22 @@ const UserListView = () => {
   if (error) return `Error! ${error.message}`;
   if (errorMany) return `Error! ${errorMany.message}`;
 
-  let listData = []
-  if (filterOn) {
-    listData = dataMany ? dataMany.user_many : [];
-  } else {
-    listData = data ? data.users : [];
+  const loadData = () => {
+    if (filterOn) {
+      setlistData(dataMany ? dataMany.user_many : []);
+    } else {
+      setlistData(data ? data.users : []);
+    }
+    // Kim: I could not find a reason why refreshing of page is not working when only calling a navigate one time.
+    navigate('/app', { replace: true })
+    navigate('/app/user', { replace: true })
   }
 
-  const handleReload = () => {
-    navigate(0);
+  const handleReload = async () => {
+    const rtn = await refetch();
+    if (rtn) {
+      loadData();
+    }
   }
 
   return (
