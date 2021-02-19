@@ -148,7 +148,8 @@ const resolvers = {
       const { password } = user
 
       const schema = Joi.object().keys({
-        userId: Joi.string().alphanum().min(3).max(20).required(),
+        userId: Joi.string().min(1).max(20).required(),
+        username: Joi.string(),
         password: Joi.string().required(),
       });
       const result = schema.validate(user);

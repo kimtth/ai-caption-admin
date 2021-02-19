@@ -18,6 +18,7 @@ const UserEditDialog = (props) => {
   const [handleEditFragment, { loading: m_loading, error: m_error, data: m_data, called }] = useMutation(userUpdateQuery, {errorPolicy: 'all'});
   const [userName, setUserName] = React.useState('');
   const [passWord, setPassword] = React.useState('');
+  const [newPassWord, setNewPassword] = React.useState('');
 
   React.useEffect(() => {
     if (data) {
@@ -39,7 +40,8 @@ const UserEditDialog = (props) => {
     const userValue = {
       ...data.user,
       username: userName,
-      password: passWord
+      // Kim: if the password field is not empty. the newPassword is going to be sent. if not, hashed value.
+      password: Boolean(newPassWord.trim()) ? newPassWord: passWord
     }
     delete userValue.__typename;
     delete userValue._id;
@@ -54,7 +56,7 @@ const UserEditDialog = (props) => {
   }
 
   const handlePasswordChange = (evt) => {
-    setPassword(evt.target.value);
+    setNewPassword(evt.target.value);
   }
 
   return (
@@ -119,12 +121,32 @@ const UserEditDialog = (props) => {
                 <TextField
                   margin="dense"
                   id="password"
-                  label="Password"
-                  // type="password"
+                  label="Password (Max Length 20)"
+                  variant="outlined"
+                  fullWidth
+                  inputProps={{ maxLength: 20 }}
+                  value={newPassWord}
+                  onChange={handlePasswordChange}
+                />
+              </Grid>
+            </Grid>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+            >
+              <Grid item xs={3}>
+                <Typography variant="subtitle1">Hashed: </Typography>
+              </Grid>
+              <Grid item xs={9}>
+                <TextField
+                  margin="dense"
+                  id="password"
+                  label="Hashed"
                   variant="outlined"
                   fullWidth
                   value={passWord}
-                  onChange={handlePasswordChange}
+                  disabled
                 />
               </Grid>
             </Grid>
