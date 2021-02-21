@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, selectedUserIds, setFilter, setFilterOn, callback, ...rest }) => {
+const Toolbar = ({ className, selectedUserIds, setFilter, setFilterOn, setDialogError, callback, ...rest }) => {
   const classes = useStyles();
   const [addOpen, setAddOpen] = React.useState(false);
   const [editOpen, setEditOpen] = React.useState(false);
@@ -78,18 +78,22 @@ const Toolbar = ({ className, selectedUserIds, setFilter, setFilterOn, callback,
       <UserAddDialog
         open={addOpen}
         callback={callback}
-        setOpen={handleClickAddOpen} />
+        setOpen={handleClickAddOpen} 
+        setDialogError={setDialogError}
+      />
       <UserDeleteDialog
         open={deleteOpen}
         callback={callback}
         setOpen={handleClickDeleteOpen}
         selectedUserIds={selectedUserIds}
+        setDialogError={setDialogError}
       />
       <UserEditDialog
         open={editOpen}
         callback={callback}
         setOpen={handleClickEditOpen}
         selectedUserIds={selectedUserIds}
+        setDialogError={setDialogError}
       />
       <Box
         display="flex"

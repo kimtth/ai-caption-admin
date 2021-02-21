@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, selectedChannelIds, setFilter, setFilterOn, callback, ...rest }) => {
+const Toolbar = ({ className, selectedChannelIds, setFilter, setFilterOn, setDialogError, callback, ...rest }) => {
   const classes = useStyles();
   const [editOpen, setEditOpen] = React.useState(false);
   const [deleteOpen, setDeleteOpen] = React.useState(false);
@@ -77,12 +77,14 @@ const Toolbar = ({ className, selectedChannelIds, setFilter, setFilterOn, callba
         callback={callback}
         setOpen={handleClickDeleteOpen}
         selectedChannelIds={selectedChannelIds}
+        setDialogError={setDialogError}
       />
       <ChannelEditDialog
         open={editOpen}
         callback={callback}
         setOpen={handleClickEditOpen}
         selectedChannelIds={selectedChannelIds}
+        setDialogError={setDialogError}
       />
       <Box
         display="flex"

@@ -13,13 +13,13 @@ import React from 'react';
 import { messageOneQuery, messageUpdateQuery } from '../../api/graph-queries';
 
 const MessageEditDialog = (props) => {
-  const { open, setOpen, selectedMessageIds, callback } = props;
+  const { open, setOpen, selectedMessageIds, setDialogError, callback } = props;
   const { loading, error, data } = useQuery(messageOneQuery, {
     variables: { id: selectedMessageIds[0] },
     skip: selectedMessageIds.length < 1,
     fetchPolicy: "no-cache"
   });
-  const [handleEditFragment, { loadingM, errorM, dataM, called }] = useMutation(messageUpdateQuery, {errorPolicy: 'all'});
+  const [handleEditFragment, { loading: loadingM, error: errorM, data: dataM, called }] = useMutation(messageUpdateQuery, {errorPolicy: 'all'});
   const [conversationText, setConversationText] = React.useState('');
   const [isAudioRecord, setIsAudioRecord] = React.useState('');
 
@@ -31,12 +31,11 @@ const MessageEditDialog = (props) => {
   }, [data])
 
   if (loading || loadingM) return 'Loading...';
-  //if (called) return 'Called...';
   if (error) return `Error! ${error.message}`;
-  if (errorM) return `ErrorM! ${errorM.message}`;
 
   const handleClose = () => {
     setOpen(false);
+    if (errorM) setDialogError(errorM.message);
   };
 
   const handleEdit = (e) => {
@@ -52,6 +51,7 @@ const MessageEditDialog = (props) => {
     handleEditFragment({ variables: { id: selectedMessageIds[0], message: messageValue } });
     callback();
     setOpen(false);
+    if (errorM) setDialogError(errorM.message);
   };
 
   const handleChange = (evt) => {

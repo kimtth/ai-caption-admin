@@ -13,7 +13,7 @@ import React from 'react';
 import { channelOneQuery, channelUpdateQuery } from '../../api/graph-queries';
 
 const ChannelEditDialog = (props) => {
-  const { open, setOpen, selectedChannelIds, callback } = props;
+  const { open, setOpen, selectedChannelIds, setDialogError, callback } = props;
   const { loading, error, data } = useQuery(channelOneQuery, {
     variables: { id: selectedChannelIds[0] },
     skip: selectedChannelIds.length < 1,
@@ -31,12 +31,11 @@ const ChannelEditDialog = (props) => {
   }, [data])
 
   if (loading || loadingM) return 'Loading...';
-  //if (called) return 'Called...';
   if (error) return `Error! ${error.message}`;
-  if (errorM) return `ErrorM! ${errorM.message}`;
 
   const handleClose = () => {
     setOpen(false);
+    if (errorM) setDialogError(errorM.message);
   };
 
   const handleEdit = (e) => {
@@ -52,6 +51,7 @@ const ChannelEditDialog = (props) => {
     handleEditFragment({ variables: { _id: selectedChannelIds[0], channel: channelValue } });
     callback();
     setOpen(false);
+    if (errorM) setDialogError(errorM.message);
   };
 
   const handleChange = (evt) => {

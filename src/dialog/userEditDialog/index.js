@@ -9,7 +9,7 @@ import React from 'react';
 import { userOneQuery, userUpdateQuery } from '../../api/graph-queries';
 
 const UserEditDialog = (props) => {
-  const { open, setOpen, selectedUserIds, callback } = props;
+  const { open, setOpen, selectedUserIds, setDialogError, callback } = props;
   const { loading, error, data } = useQuery(userOneQuery, {
     variables: { userId: selectedUserIds[0] },
     skip: selectedUserIds.length < 1,
@@ -29,10 +29,10 @@ const UserEditDialog = (props) => {
 
   if (loading || m_loading) return 'Loading...';
   if (error) return `Error! ${error.message}`;
-  if (m_error) return `ErrorM! ${m_error.message}`;
 
   const handleClose = () => {
     setOpen(false);
+    if (m_error) setDialogError(m_error.message);
   };
 
   const handleEdit = (e) => {
@@ -49,6 +49,7 @@ const UserEditDialog = (props) => {
     handleEditFragment({ variables: { userId: selectedUserIds[0], user: userValue } });
     callback();
     setOpen(false);
+    if (m_error) setDialogError(m_error.message);
   };
 
   const handleChange = (evt) => {

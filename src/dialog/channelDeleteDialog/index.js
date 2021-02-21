@@ -9,11 +9,12 @@ import React from 'react';
 import { channelDeleteQuery } from '../../api/graph-queries';
 
 const ChannelDeleteDialog = (props) => {
-  const { open, setOpen, selectedChannelIds, callback } = props;
-  const [handleDeleteFragment, { data }] = useMutation(channelDeleteQuery, {errorPolicy: 'all'});
+  const { open, setOpen, selectedChannelIds, setDialogError, callback } = props;
+  const [handleDeleteFragment, { error, data }] = useMutation(channelDeleteQuery, {errorPolicy: 'all'});
 
   const handleClose = () => {
     setOpen(false);
+    if (error) setDialogError(error.message);
   };
 
   const handleDelete = () => {
@@ -21,6 +22,7 @@ const ChannelDeleteDialog = (props) => {
     handleDeleteFragment({ variables: { _ids: selectedChannelIds } });
     callback();
     setOpen(false);
+    if (error) setDialogError(error.message);
   };
 
   return (

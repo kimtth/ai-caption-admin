@@ -20,6 +20,7 @@ const UserListView = () => {
   const classes = useStyles();
   const [filterOn, setFilterOn] = useState(false);
   const [listData, setlistData] = useState([]);
+  const [dialogError, setDialogError] = useState('');
   const [filter, setFilter] = useState({
     criteria: '',
     keyword: ''
@@ -43,6 +44,7 @@ const UserListView = () => {
   if (loading || loadingMany) return 'Loading...';
   if (error) return `Error! ${error.message}`;
   if (errorMany) return `Error! ${errorMany.message}`;
+  if (dialogError) return `Error! ${dialogError}`;
 
   const loadData = () => {
     if (filterOn) {
@@ -73,6 +75,7 @@ const UserListView = () => {
           setFilter={setFilter}
           setFilterOn={setFilterOn}
           selectedUserIds={selectedUserIds}
+          setDialogError={setDialogError}
         />
         <Box mt={3}>
           <Results
