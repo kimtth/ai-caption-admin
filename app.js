@@ -12,9 +12,11 @@ const mount = require("koa-mount");
 const mongoose = require('mongoose');
 const cors = require('@koa/cors');
 const api = require('./core');
-const { typeDefs, resolvers } = require('./core/api/apollo-def')
+const { typeDefs, resolvers } = require('./core/api/apollo-def');
+const { dialogTypeDefs, dialogResolvers } = require('./core/api/apollo-dialog-defs')
 const { ApolloServer, ApolloError } = require('apollo-server-koa');
 const { jwtGetUser, jwtMiddleware } = require('./core/api/lib/jwtMiddleware');
+const _ = require('lodash');
 
 const corsOptionsDev = {
    origin: 'http://localhost:3000',
@@ -44,8 +46,8 @@ if (process.env.NODE_ENV !== 'production') { //development
 }
 
 const apollo = new ApolloServer({ 
-  typeDefs, 
-  resolvers,
+  typeDefs: [typeDefs, dialogTypeDefs], 
+  resolvers: _.merge({}, resolvers, dialogResolvers),
   context: ({ctx}) => {
     const token = ctx.cookies.get('access_token');
     if(token){

@@ -1,0 +1,21 @@
+type Count {
+    count: Int
+}
+
+type CountWithTotal {
+    count: Int
+    totalCount: Int
+}
+
+type CountDay {
+    day: String
+    count: Int
+}
+
+type Query {
+    audio: CountWithTotal
+    user: Count
+    custom: CountWithTotal
+    channel: Count
+    traffic: [CountDay]
+}

@@ -23,7 +23,6 @@ const AudioRecord = ({ className, ...rest }) => {
         backgroundColor: [
           colors.green[500],
           colors.red[600],
-          // colors.orange[600]
         ],
         borderWidth: 8,
         borderColor: colors.common.white,
