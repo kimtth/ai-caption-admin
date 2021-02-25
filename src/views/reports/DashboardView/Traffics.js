@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, makeStyles, colors } from '@material-ui/core';
+import { totalChannelCountQuery } from '../../../api/dialog-queries';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(() => ({
   root: {}

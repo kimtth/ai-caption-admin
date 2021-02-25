@@ -1,8 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Avatar, Card, CardContent, Grid, Typography, makeStyles, colors } from '@material-ui/core';
 import MeetingRoomIcon from '@material-ui/icons/MeetingRoom';
+import { totalChannelCountQuery } from '../../../api/dialog-queries';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -17,6 +19,13 @@ const useStyles = makeStyles(() => ({
 
 const TotalChannel = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [dataCnt, setDataCnt] = useState({});
+  const { loading, error, data: Count, refetch } = useQuery(totalChannelCountQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      setDataCnt(Count?.channelCnt);
+    }
+  });
 
   return (
     <Card
@@ -41,7 +50,7 @@ const TotalChannel = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              200
+              {dataCnt? dataCnt.count : '-'}
             </Typography>
           </Grid>
           <Grid item>

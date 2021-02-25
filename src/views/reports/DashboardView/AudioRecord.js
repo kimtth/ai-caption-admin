@@ -3,8 +3,10 @@ import SettingsVoiceIcon from '@material-ui/icons/SettingsVoice';
 import FormatColorTextIcon from '@material-ui/icons/FormatColorText';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import { audioRecordQuery } from '../../../api/dialog-queries';
+import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -15,11 +17,21 @@ const useStyles = makeStyles(() => ({
 const AudioRecord = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [dataCnt, setDataCnt] = useState({})
+  const { loading, error, data: CountWithTotal, refetch } = useQuery(audioRecordQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      setDataCnt(CountWithTotal?.audioCnt);
+    }
+  });
+
+  if (loading) return 'Loading...';
+  if (error) return `Error! ${error.message}`;
 
   const data = {
     datasets: [
       {
-        data: [63, 37],
+        data: [dataCnt?.count, dataCnt?.totalCount],
         backgroundColor: [
           colors.green[500],
           colors.red[600],
@@ -29,7 +41,7 @@ const AudioRecord = ({ className, ...rest }) => {
         hoverBorderColor: colors.common.white
       }
     ],
-    labels: ['Desktop', 'Tablet', 'Mobile']
+    labels: ['Audio', 'Text']
   };
 
   const options = {
@@ -57,13 +69,13 @@ const AudioRecord = ({ className, ...rest }) => {
   const devices = [
     {
       title: 'Audio',
-      value: 63,
+      value: Math.round(dataCnt?.count * 100 / dataCnt?.totalCount),
       icon: SettingsVoiceIcon,
       color: colors.indigo[500]
     },
     {
       title: 'Text',
-      value: 37,
+      value: Math.round((dataCnt?.totalCount - dataCnt?.count) * 100 / dataCnt?.totalCount),
       icon: FormatColorTextIcon,
       color: colors.red[600]
     },

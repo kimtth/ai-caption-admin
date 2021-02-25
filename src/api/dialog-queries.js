@@ -3,7 +3,7 @@ import gql from 'graphql-tag';
 
 export const audioRecordQuery = gql `
   query AudioRecordQuery {
-    audio {
+    audioCnt {
       count
       totalCount
     }
@@ -12,15 +12,15 @@ export const audioRecordQuery = gql `
 
 export const totalUserCountQuery = gql `
   query TotalUserQuery {
-    user {
-      totalCount
+    userCnt {
+      count
     }
   }
 `;
 
 export const customCountQuery = gql `
-  query TotalUserQuery {
-    custom {
+  query customCountQuery {
+    customCnt {
       count
       totalCount
     }
@@ -28,16 +28,16 @@ export const customCountQuery = gql `
 `;
 
 export const totalChannelCountQuery = gql `
-  query TotalUserQuery {
-    channel {
+  query totalChannelCountQuery {
+    channelCnt {
       count
     }
   }
 `;
 
 export const trafficCountQuery = gql `
-  query TotalUserQuery {
-    traffic {
+  query trafficCountQuery {
+    trafficCnt {
       day
       count
     }

@@ -1,5 +1,7 @@
 const fs = require('fs');
-const { gql } = require('apollo-server-koa');
+const {
+  gql
+} = require('apollo-server-koa');
 const moment = require("moment");
 const User = require('../models/user');
 const Channel = require('../models/channel');
@@ -11,12 +13,12 @@ const dialogTypeDefs = gql(fs.readFileSync(`${__dirname}/dialog.graphql`, {
 
 const dialogResolvers = {
   Query: {
-    audio: async (parent, args, context, info) => {
+    audioCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await Message.count({
+      const cnt = await Message.countDocuments({
         isAudioRecord: true
       });
-      const totalcnt = await Message.count();
+      const totalcnt = await Message.countDocuments();
       if (cnt) {
         return {
           count: cnt,
@@ -24,18 +26,18 @@ const dialogResolvers = {
         }
       }
     },
-    user: async (parent, args, context, info) => {
+    userCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await User.count();
+      const cnt = await User.countDocuments();
       if (cnt) {
         return {
-          totalCount: cnt
+          count: cnt
         }
       }
     },
-    custom: async (parent, args, context, info) => {
+    customCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await User.count();
+      const cnt = await User.countDocuments();
       if (cnt) {
         return {
           count: cnt,
@@ -43,23 +45,51 @@ const dialogResolvers = {
         }
       }
     },
-    channel: async (parent, args, context, info) => {
+    channelCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await Channel.count();
+      const cnt = await Channel.countDocuments();
       if (cnt) {
         return {
           count: cnt
         }
       }
     },
-    traffic: async (parent, args, context, info) => {
+    trafficCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      // type CountDay {
-      //   day: String
-      //   count: Int
-      // }
+
+      let CountDays = [];
+      let fromDateBefore = 2;
+      let toDateBefore = 1;
       const today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
-      moment(today).add(-1, 'days').format('YYYY-MM-DD[T00:00:00.000Z]')
+
+      for (let i = 0; i < 15; i++) {
+        const fromDate = moment(today).subtract(fromDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
+        const toDate = moment(today).subtract(toDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
+        
+        if(i===0){
+          console.log(new Date(fromDate))
+          console.log(new Date(toDate))
+        }
+        
+        const cnt = await Message.countDocuments({
+          publishedDate: {
+            "$gte": new Date(fromDate),
+            "$lt": new Date(toDate)
+          }
+        })
+        console.log(cnt);
+
+        const CountDay = {
+          day: `${fromDate} <-> ${toDate}`,
+          count: cnt
+        }
+        CountDays.push(CountDay);
+
+        toDateBefore = fromDateBefore;
+        fromDateBefore += 1;
+      }
+
+      return CountDays;
     }
   }
 }

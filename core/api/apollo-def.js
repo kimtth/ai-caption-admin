@@ -82,7 +82,7 @@ const resolvers = {
           owner
         }
       }
-      
+      // variable input
       {
         "filter":
         {

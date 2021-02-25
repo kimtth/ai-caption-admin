@@ -12,10 +12,10 @@ type CountDay {
     count: Int
 }
 
-type Query {
-    audio: CountWithTotal
-    user: Count
-    custom: CountWithTotal
-    channel: Count
-    traffic: [CountDay]
+extend type Query {
+    audioCnt: CountWithTotal
+    userCnt: Count
+    customCnt: CountWithTotal
+    channelCnt: Count
+    trafficCnt: [CountDay]
 }

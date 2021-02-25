@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Card, CardContent, Grid, Typography, colors, makeStyles } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
+import { totalUserCountQuery } from '../../../api/dialog-queries';
+import { useQuery } from '@apollo/react-hooks'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +27,15 @@ const useStyles = makeStyles((theme) => ({
 
 const TotalUsers = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [dataCnt, setDataCnt] = useState({});
+  const { loading, error, data: Count, refetch } = useQuery(totalUserCountQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      console.log(Count)
+      setDataCnt(Count?.userCnt);
+    }
+  });
+
 
   return (
     <Card
@@ -49,7 +60,7 @@ const TotalUsers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              1,600
+              {dataCnt? dataCnt.count : '-'}
             </Typography>
           </Grid>
           <Grid item>
