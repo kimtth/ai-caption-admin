@@ -18,6 +18,14 @@ export const totalUserCountQuery = gql `
   }
 `;
 
+export const userDifferenceCountQuery = gql `
+  query UserDifferenceCountQuery {
+    userDiffCnt {
+      count
+    }
+  }
+`;
+
 export const customCountQuery = gql `
   query customCountQuery {
     customCnt {
@@ -40,6 +48,7 @@ export const trafficCountQuery = gql `
     trafficCnt {
       day
       count
+      lastMonthCnt
     }
   }
 `;

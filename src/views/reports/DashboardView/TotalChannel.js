@@ -52,6 +52,12 @@ const TotalChannel = ({ className, ...rest }) => {
             >
               {dataCnt? dataCnt.count : '-'}
             </Typography>
+            <Typography
+              color="textSecondary"
+              variant="caption"
+            >
+              {"Excluded My Channel"}
+            </Typography>
           </Grid>
           <Grid item>
             <Avatar className={classes.avatar}>

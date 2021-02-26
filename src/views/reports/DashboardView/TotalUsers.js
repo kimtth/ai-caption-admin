@@ -3,8 +3,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Avatar, Box, Card, CardContent, Grid, Typography, colors, makeStyles } from '@material-ui/core';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
-import { totalUserCountQuery } from '../../../api/dialog-queries';
+import { totalUserCountQuery, userDifferenceCountQuery } from '../../../api/dialog-queries';
 import { useQuery } from '@apollo/react-hooks'
 
 const useStyles = makeStyles((theme) => ({
@@ -28,14 +29,20 @@ const useStyles = makeStyles((theme) => ({
 const TotalUsers = ({ className, ...rest }) => {
   const classes = useStyles();
   const [dataCnt, setDataCnt] = useState({});
-  const { loading, error, data: Count, refetch } = useQuery(totalUserCountQuery, {
+  const [diffCnt, setDiffCnt] = useState({});
+  const { loading, error, data: Count } = useQuery(totalUserCountQuery, {
     fetchPolicy: "no-cache",
     onCompleted: () => {
-      console.log(Count)
       setDataCnt(Count?.userCnt);
     }
   });
-
+  const { loading: loadingDiff, error: errorDiff, data: CountDiff } = useQuery(userDifferenceCountQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      console.log(CountDiff);
+      setDiffCnt(CountDiff?.userDiffCnt);
+    }
+  });
 
   return (
     <Card
@@ -60,7 +67,7 @@ const TotalUsers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              {dataCnt? dataCnt.count : '-'}
+              {dataCnt ? dataCnt.count : '-'}
             </Typography>
           </Grid>
           <Grid item>
@@ -79,13 +86,13 @@ const TotalUsers = ({ className, ...rest }) => {
             className={classes.differenceValue}
             variant="body2"
           >
-            16%
+            {diffCnt ? Math.round(diffCnt.count * 100 / dataCnt.count) : '-'} %
           </Typography>
           <Typography
             color="textSecondary"
             variant="caption"
           >
-            Since last month
+            Since last month (from Today)
           </Typography>
         </Box>
       </CardContent>

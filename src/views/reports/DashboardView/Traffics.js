@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import { Bar } from 'react-chartjs-2';
 import { Box, Button, Card, CardContent, CardHeader, Divider, useTheme, makeStyles, colors } from '@material-ui/core';
-import { totalChannelCountQuery } from '../../../api/dialog-queries';
+import { trafficCountQuery } from '../../../api/dialog-queries';
 import { useQuery } from '@apollo/react-hooks';
 
 const useStyles = makeStyles(() => ({
@@ -13,17 +13,31 @@ const useStyles = makeStyles(() => ({
 const Traffics = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [dataCnt, setDataCnt] = useState({});
+  const { loading, error, data: Count, refetch } = useQuery(trafficCountQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      setDataCnt(Count?.trafficCnt);
+      const data = Count?.trafficCnt.map(item => {
+        return item.count
+      })
+    }
+  });
 
   const data = {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: [18, 5, 19, 27, 29, 19, 20, 18, 5, 19, 27, 29, 19, 20],
+        data: Count?.trafficCnt.map(item => {
+          return item.count
+        }).reverse(),
         label: 'This month'
       },
       {
         backgroundColor: colors.grey[200],
-        data: [11, 20, 12, 29, 30, 25, 13, 18, 5, 19, 27, 29, 19, 20],
+        data: Count?.trafficCnt.map(item => {
+          return item.lastMonthCnt
+        }).reverse(),
         label: 'Last month'
       }
     ],

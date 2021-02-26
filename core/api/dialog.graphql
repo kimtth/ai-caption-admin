@@ -10,11 +10,13 @@ type CountWithTotal {
 type CountDay {
     day: String
     count: Int
+    lastMonthCnt: Int
 }
 
 extend type Query {
     audioCnt: CountWithTotal
     userCnt: Count
+    userDiffCnt: Count
     customCnt: CountWithTotal
     channelCnt: Count
     trafficCnt: [CountDay]

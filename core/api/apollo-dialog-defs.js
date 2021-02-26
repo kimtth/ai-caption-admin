@@ -6,6 +6,7 @@ const moment = require("moment");
 const User = require('../models/user');
 const Channel = require('../models/channel');
 const Message = require('../models/message');
+const Admin = require('../models/admin');
 
 const dialogTypeDefs = gql(fs.readFileSync(`${__dirname}/dialog.graphql`, {
   encoding: 'utf8'
@@ -35,13 +36,30 @@ const dialogResolvers = {
         }
       }
     },
-    customCnt: async (parent, args, context, info) => {
+    userDiffCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await User.countDocuments();
+      const today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
+      const fromDate = moment(today).subtract(1, 'months').format('YYYY-MM-DD[T00:00:00.000Z]');
+      const cnt = await User.countDocuments({
+        publishedDate: {
+          "$gte": new Date(fromDate),
+          "$lt": new Date(today)
+        }
+      })
       if (cnt) {
         return {
+          count: cnt
+        }
+      }
+    },
+    customCnt: async (parent, args, context, info) => {
+      if (!context.userId) return null;
+      const cnt = await Admin.countDocuments();
+      const totalcnt = await Message.countDocuments();
+      if (totalcnt) {
+        return {
           count: cnt,
-          totalCount: cnt
+          totalCount: totalcnt
         }
       }
     },
@@ -58,18 +76,16 @@ const dialogResolvers = {
       if (!context.userId) return null;
 
       let CountDays = [];
-      let fromDateBefore = 2;
-      let toDateBefore = 1;
+      let fromDateBefore = 1;
+      let toDateBefore = 0;
       const today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
 
       for (let i = 0; i < 15; i++) {
         const fromDate = moment(today).subtract(fromDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
         const toDate = moment(today).subtract(toDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
         
-        if(i===0){
-          console.log(new Date(fromDate))
-          console.log(new Date(toDate))
-        }
+        const lastMonthFromDate = moment(fromDate).subtract(1, 'months').format('YYYY-MM-DD[T00:00:00.000Z]');
+        const lastMonthToDate = moment(toDate).subtract(1, 'months').format('YYYY-MM-DD[T00:00:00.000Z]');
         
         const cnt = await Message.countDocuments({
           publishedDate: {
@@ -77,11 +93,17 @@ const dialogResolvers = {
             "$lt": new Date(toDate)
           }
         })
-        console.log(cnt);
+        const lastMonthCnt = await Message.countDocuments({
+          publishedDate: {
+            "$gte": new Date(lastMonthFromDate),
+            "$lt": new Date(lastMonthToDate)
+          }
+        })
 
         const CountDay = {
-          day: `${fromDate} <-> ${toDate}`,
-          count: cnt
+          day: `${toDate}`,
+          count: cnt,
+          lastMonthCnt: lastMonthCnt
         }
         CountDays.push(CountDay);
 
