@@ -1,7 +1,5 @@
 const fs = require('fs');
-const {
-  gql
-} = require('apollo-server-koa');
+const { gql } = require('apollo-server-koa');
 const moment = require("moment");
 const User = require('../models/user');
 const Channel = require('../models/channel');
@@ -54,7 +52,9 @@ const dialogResolvers = {
     },
     customCnt: async (parent, args, context, info) => {
       if (!context.userId) return null;
-      const cnt = await Admin.countDocuments();
+      const cnt = await Admin.countDocuments({
+        type: 'Custom'
+      });
       const totalcnt = await Message.countDocuments();
       if (totalcnt) {
         return {

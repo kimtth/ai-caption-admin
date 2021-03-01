@@ -1,6 +1,4 @@
-import Cookies from 'js-cookie';
 import { AUTH_API_ENDPOINT } from './Constants';
-
 
 export async function login(user) {
   const { userId, password } = user;

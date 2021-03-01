@@ -29,11 +29,22 @@ type Message {
     publishedDate: String
 }
 
+type Custom {
+    _id: ID!
+    id: ID!
+    type: String
+    refId: String
+    value: String
+    stream: String
+    publishedDate: String
+}
+
 type Query {
     hello: String
     channels: [Channel]
     messages: [Message]
     users: [User]
+    customs: [Custom]
     channel(_id: ID!): Channel
     message(id: ID!): Message
     user(userId: ID!): User

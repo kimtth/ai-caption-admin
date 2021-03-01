@@ -1,7 +1,20 @@
-/* eslint-disable */ 
+/* eslint-disable */
 import gql from 'graphql-tag';
 
-export const usersQuery = gql `
+export const customQuery = gql`
+  query CustomsQuery {
+    customs {
+      id
+      type
+      refId
+      value
+      stream
+      publishedDate
+    }
+  }
+`;
+
+export const usersQuery = gql`
   query UsersQuery {
     users {
       userId
@@ -12,7 +25,7 @@ export const usersQuery = gql `
   }
 `;
 
-export const messagesQuery = gql `
+export const messagesQuery = gql`
   query MessagesQuery {
     messages {
       id
@@ -28,7 +41,7 @@ export const messagesQuery = gql `
   }
 `;
 
-export const channelsQuery = gql `
+export const channelsQuery = gql`
   query ChannelsQuery {
     channels {
       _id
@@ -41,7 +54,7 @@ export const channelsQuery = gql `
   }
 `;
 
-export const userOneQuery = gql ` 
+export const userOneQuery = gql` 
   query UserOneQuery($userId: ID!) {
     user(userId: $userId){
       userId
@@ -52,7 +65,7 @@ export const userOneQuery = gql `
   }
 `;
 
-export const channelOneQuery = gql `
+export const channelOneQuery = gql`
   query ChannelOneQuery($id: ID!) {
     channel(_id: $id) {
       _id
@@ -81,7 +94,7 @@ export const messageOneQuery = gql`
   }
 `;
 
-export const userManyQuery = gql ` 
+export const userManyQuery = gql` 
   query UserManyQuery($filter: SearchInput!) {
     user_many(filter: $filter){
       userId
@@ -92,7 +105,7 @@ export const userManyQuery = gql `
   }
 `;
 
-export const channelManyQuery = gql `
+export const channelManyQuery = gql`
   query ChannelManyQuery($filter: SearchInput!) {
     channel_many(filter: $filter) {
       _id
@@ -178,7 +191,7 @@ export const messageUpdateQuery = gql`
   }
 `;
 
-export const userDeleteQuery = gql ` 
+export const userDeleteQuery = gql` 
   mutation UserDeleteQuery($userIds: [ID]!) {
     deleteUsers(userIds: $userIds){
       userId
@@ -188,7 +201,7 @@ export const userDeleteQuery = gql `
   }
 `;
 
-export const channelDeleteQuery = gql `
+export const channelDeleteQuery = gql`
   mutation ChannelDeleteQuery($_ids: [ID]!) {
     deleteChannels(_ids: $_ids) {
       id
@@ -216,4 +229,4 @@ export const messageDeleteQuery = gql`
   }
 `;
 
-/* eslint-disable */ 
+/* eslint-disable */

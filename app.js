@@ -1,7 +1,7 @@
 require('dotenv').config()
 const env = process.env.NODE_ENV;
 if (env !== "production") {
-    require('dotenv').config({ path: `./.env.dev` })
+  require('dotenv').config({ path: `./.env.dev` })
 }
 
 const Koa = require('koa');
@@ -19,14 +19,14 @@ const { jwtGetUser, jwtMiddleware } = require('./core/api/lib/jwtMiddleware');
 const _ = require('lodash');
 
 const corsOptionsDev = {
-   origin: 'http://localhost:3000',
-   credentials: true
+  origin: 'http://localhost:3000',
+  credentials: true
 };
 const app = new Koa();
 if (process.env.NODE_ENV !== 'production') {
-   app.use(cors(corsOptionsDev));
+  app.use(cors(corsOptionsDev));
 } else {
-   app.use(cors());
+  app.use(cors());
 }
 app.use(BodyParser()); //Kim: Bodyparser should be set before router.
 app.use(jwtMiddleware);
@@ -42,15 +42,15 @@ app.use(router.routes()).use(router.allowedMethods());
 let mongoUri = process.env.MONGO_ENDPOINT
 let port = 80
 if (process.env.NODE_ENV !== 'production') { //development
-    port = 8081;
+  port = 8081;
 }
 
-const apollo = new ApolloServer({ 
-  typeDefs: [typeDefs, dialogTypeDefs], 
+const apollo = new ApolloServer({
+  typeDefs: [typeDefs, dialogTypeDefs],
   resolvers: _.merge({}, resolvers, dialogResolvers),
-  context: ({ctx}) => {
+  context: ({ ctx }) => {
     const token = ctx.cookies.get('access_token');
-    if(token){
+    if (token) {
       const userId = jwtGetUser(token);
       if (!userId) throw new ApolloError('you must be logged in');
       return { userId };
@@ -60,17 +60,17 @@ const apollo = new ApolloServer({
 });
 app.use(apollo.getMiddleware());
 const server = require('http').createServer(app.callback())
- 
+
 let dbName = process.env.DB_NAME;
 server.listen(port, () => {
-    console.log(`Listening on (Web) ${port}`)
-    //Kim: useCreateIndex: true: Prevent DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
-    //Kim: DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated.
-    mongoose.connect(mongoUri, { useCreateIndex: true, dbName: dbName, useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
-        .then(() => {
-            console.log('Connected to MongoDB')
-        })
-        .catch(e => {
-            console.log(e);
-        })
+  console.log(`Listening on (Web) ${port}`)
+  //Kim: useCreateIndex: true: Prevent DeprecationWarning: collection.ensureIndex is deprecated. Use createIndexes instead.
+  //Kim: DeprecationWarning: Mongoose: `findOneAndUpdate()` and `findOneAndDelete()` without the `useFindAndModify` option set to false are deprecated.
+  mongoose.connect(mongoUri, { useCreateIndex: true, dbName: dbName, useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+      console.log('Connected to MongoDB')
+    })
+    .catch(e => {
+      console.log(e);
+    })
 })

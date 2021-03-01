@@ -3,8 +3,9 @@ import { Box, Container, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import data from './data';
-import { useNavigate as useHistory } from 'react-router-dom'
+import { useQuery } from '@apollo/react-hooks';
+import { customQuery } from '../../../api/graph-queries';
+import { useNavigate } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -17,18 +18,31 @@ const useStyles = makeStyles((theme) => ({
 
 const SpeechListView = () => {
   const classes = useStyles();
-  const [customers] = useState(data);
-  const history = useHistory()
+  const navigate = useNavigate();
+  const [listData, setlistData] = useState([]);
+  const { loading, error, data, refetch } = useQuery(customQuery, {
+    fetchPolicy: "no-cache",
+    onCompleted: () => {
+      loadData()
+    }
+  });
+
+  const loadData = () => {
+    setlistData(data ? data.customs : []);
+    // Kim: I could not find a reason why refreshing of page is not working when only calling a navigate one time.
+    navigate('/app', { replace: true })
+    navigate('/app/speech', { replace: true })
+  }
 
   return (
     <Page
       className={classes.root}
-      title="Channels"
+      title="Customs"
     >
       <Container maxWidth={false}>
         <Toolbar />
         <Box mt={3}>
-          <Results customers={customers} />
+          <Results customs={listData} />
         </Box>
       </Container>
     </Page>

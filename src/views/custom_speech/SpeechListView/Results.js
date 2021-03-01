@@ -12,42 +12,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customers, ...rest }) => {
+const Results = ({ className, customs, ...rest }) => {
   const classes = useStyles();
-  const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
+  const [selectedCustomIds, setSelectedCustomIds] = useState([]);
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedCustomerIds;
+    let newSelectedCustomIds;
 
     if (event.target.checked) {
-      newSelectedCustomerIds = customers.map((customer) => customer.id);
+      newSelectedCustomIds = customs.map((custom) => custom.id);
     } else {
-      newSelectedCustomerIds = [];
+      newSelectedCustomIds = [];
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedCustomIds(newSelectedCustomIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedCustomerIds.indexOf(id);
-    let newSelectedCustomerIds = [];
+    const selectedIndex = selectedCustomIds.indexOf(id);
+    let newSelectedCustomIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds, id);
+      newSelectedCustomIds = newSelectedCustomIds.concat(selectedCustomIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(1));
-    } else if (selectedIndex === selectedCustomerIds.length - 1) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(selectedCustomerIds.slice(0, -1));
+      newSelectedCustomIds = newSelectedCustomIds.concat(selectedCustomIds.slice(1));
+    } else if (selectedIndex === selectedCustomIds.length - 1) {
+      newSelectedCustomIds = newSelectedCustomIds.concat(selectedCustomIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedCustomerIds = newSelectedCustomerIds.concat(
-        selectedCustomerIds.slice(0, selectedIndex),
-        selectedCustomerIds.slice(selectedIndex + 1)
+      newSelectedCustomIds = newSelectedCustomIds.concat(
+        selectedCustomIds.slice(0, selectedIndex),
+        selectedCustomIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedCustomerIds(newSelectedCustomerIds);
+    setSelectedCustomIds(newSelectedCustomIds);
   };
 
   const handleLimitChange = (event) => {
@@ -70,29 +70,29 @@ const Results = ({ className, customers, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedCustomerIds.length === customers.length}
+                    checked={selectedCustomIds.length === customs.length}
                     color="primary"
                     indeterminate={
-                      selectedCustomerIds.length > 0
-                      && selectedCustomerIds.length < customers.length
+                      selectedCustomIds.length > 0
+                      && selectedCustomIds.length < customs.length
                     }
                     onChange={handleSelectAll}
                   />
                 </TableCell>
                 <TableCell>
-                  Channel Name
+                  Custom Id
                 </TableCell>
                 <TableCell width="5%">
-                  User Id
+                  Type
                 </TableCell>
                 <TableCell>
-                  Recognized
+                  Reference Id
                 </TableCell>
                 <TableCell>
-                  Translate
+                  Value
                 </TableCell>
                 <TableCell>
-                  Audio Record
+                  Stream
                 </TableCell>
                 <TableCell>
                   Published
@@ -100,36 +100,36 @@ const Results = ({ className, customers, ...rest }) => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {customers.slice(0, limit).map((customer) => (
+              {customs.slice(0, limit).map((custom) => (
                 <TableRow
                   hover
-                  key={customer.id}
-                  selected={selectedCustomerIds.indexOf(customer.id) !== -1}
+                  key={custom.id}
+                  selected={selectedCustomIds.indexOf(custom.id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedCustomerIds.indexOf(customer.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, customer.id)}
+                      checked={selectedCustomIds.indexOf(custom.id) !== -1}
+                      onChange={(event) => handleSelectOne(event, custom.id)}
                       value="true"
                     />
                   </TableCell>
                   <TableCell>
-                    {customer.name}
+                    {custom.id}
                   </TableCell>
                   <TableCell>
-                    {customer.email}
+                    {custom.type}
                   </TableCell>
                   <TableCell>
-                    {`${customer.address.city}, ${customer.address.state}, ${customer.address.country}`}
+                    {custom.refId}
                   </TableCell>
                   <TableCell>
-                    {customer.phone}
+                    {custom.value}
                   </TableCell>
                   <TableCell>
-                    {customer.address.state}
+                    {custom.stream.slice(0, 50)}...
                   </TableCell>
                   <TableCell>
-                    {moment(customer.createdAt).format('DD/MM/YYYY')}
+                    {moment(parseInt(custom.publishedDate, 10)).format('YYYY/MM/DD HH:MM:SS')}
                   </TableCell>
                 </TableRow>
               ))}
@@ -139,7 +139,7 @@ const Results = ({ className, customers, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={customers.length}
+        count={customs.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -152,7 +152,7 @@ const Results = ({ className, customers, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  customers: PropTypes.array.isRequired
+  customs: PropTypes.array.isRequired
 };
 
 export default Results;

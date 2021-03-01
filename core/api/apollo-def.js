@@ -4,6 +4,7 @@ const { gql, ApolloError } = require('apollo-server-koa');
 const User = require('../models/user');
 const Channel = require('../models/channel');
 const Message = require('../models/message');
+const Admin = require('../models/admin');
 
 const typeDefs = gql(fs.readFileSync(`${__dirname}/schema.graphql`, {
   encoding: 'utf8'
@@ -13,6 +14,13 @@ const typeDefs = gql(fs.readFileSync(`${__dirname}/schema.graphql`, {
 const resolvers = {
   Query: {
     hello: async () => await 'Hello world!',
+    customs: async (parent, args, context, info) => {
+      if (!context.userId) return null;
+      const customs = await Admin.find();
+      if (customs) {
+        return customs
+      }
+    },
     user: async (parent, args, context, info) => {
       if (!context.userId) return null;
       const { userId } = args;
@@ -73,24 +81,6 @@ const resolvers = {
       } catch (e) {
         throw new ApolloError(e, 'ERROR', {});
       }
-
-      /*
-      query hehe($filter: SearchInput!){
-        channel_many(filter: $filter) {
-          id
-          name
-          owner
-        }
-      }
-      // variable input
-      {
-        "filter":
-        {
-          "criteria": "name",
-          "keyword": "dododo"
-        }
-      }
-      */
     },
     message_many: async (parent, args, context, info) => {
       if (!context.userId) return null;
@@ -172,7 +162,7 @@ const resolvers = {
       const { password } = user;
 
       // Kim: check for already hashed or not.
-      if(!password.startsWith('$2b$10') && password.length < 25){
+      if (!password.startsWith('$2b$10') && password.length < 25) {
         const updated_user = await new User(user);
         await updated_user.setPassword(password);
         user.password = updated_user.password;

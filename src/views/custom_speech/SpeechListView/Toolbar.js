@@ -1,8 +1,7 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import { Box, Button, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
-import { Box, Button, Card, CardContent, TextField, InputAdornment, SvgIcon, makeStyles } from '@material-ui/core';
-import { Search as SearchIcon } from 'react-feather';
+import PropTypes from 'prop-types';
+import React from 'react';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
