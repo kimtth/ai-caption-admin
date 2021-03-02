@@ -7,7 +7,7 @@ import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { logout } from 'src/api/auth-client';
 import Logo from 'src/components/Logo';
-import { setAuth } from 'src/api/inMemoryAuth';
+import { removeAuth } from 'src/api/inMemoryAuth';
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -24,7 +24,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const onSignOut = (e) => {
     e.preventDefault();
     console.log('sign-out');
-    setAuth(false);
+    removeAuth();
     if(logout()){
       navigate('/', { replace: true });
     }

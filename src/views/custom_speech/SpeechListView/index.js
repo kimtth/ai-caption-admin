@@ -20,6 +20,7 @@ const SpeechListView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [listData, setlistData] = useState([]);
+  const [selectedCustomIds, setSelectedCustomIds] = useState([]);
   const { loading, error, data, refetch } = useQuery(customQuery, {
     fetchPolicy: "no-cache",
     onCompleted: () => {
@@ -40,9 +41,16 @@ const SpeechListView = () => {
       title="Customs"
     >
       <Container maxWidth={false}>
-        <Toolbar />
+        <Toolbar
+          customs={listData}
+          selectedCustomIds={selectedCustomIds}
+        />
         <Box mt={3}>
-          <Results customs={listData} />
+          <Results
+            customs={listData}
+            selectedCustomIds={selectedCustomIds}
+            setSelectedCustomIds={setSelectedCustomIds}
+          />
         </Box>
       </Container>
     </Page>

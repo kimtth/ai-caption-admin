@@ -34,7 +34,7 @@ const items = [
   {
     href: '/app/settings',
     icon: SettingsIcon,
-    title: 'Settings'
+    title: 'Useful Links'
   },
 ];
 

@@ -12,9 +12,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, customs, ...rest }) => {
+const Results = ({ className, customs, selectedCustomIds, setSelectedCustomIds, ...rest }) => {
   const classes = useStyles();
-  const [selectedCustomIds, setSelectedCustomIds] = useState([]);
   const [limit, setLimit] = useState(100);
   const [page, setPage] = useState(0);
 

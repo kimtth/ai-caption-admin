@@ -45,8 +45,6 @@ The documentation for the React Material Kit is can be found [here](https://mate
 Within the download you'll find the following directories and files:
 
 ```
-material-react-dashboard
-
 ├── core
 	├── api
 	├── graphql
