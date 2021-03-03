@@ -1,7 +1,7 @@
 import { Box, Container, makeStyles } from '@material-ui/core';
 import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
-import Page from 'src/components/Page';
+import Page from '../../../components/Page';
 import { channelsQuery, channelManyQuery } from '../../../api/graph-queries';
 import Results from './Results';
 import Toolbar from './Toolbar';

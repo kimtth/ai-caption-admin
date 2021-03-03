@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
-import { userOneQuery } from 'src/api/graph-queries';
+import { userOneQuery } from '../../../api/graph-queries';
 
 const useStyles = makeStyles(({
   root: {}

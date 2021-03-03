@@ -3,12 +3,12 @@ import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import 'react-perfect-scrollbar/dist/css/styles.css';
 import { useRoutes } from 'react-router-dom';
-import GlobalStyles from 'src/components/GlobalStyles';
-import 'src/mixins/chartjs';
-import routes from 'src/routes';
-import theme from 'src/theme';
+import GlobalStyles from './components/GlobalStyles';
+import './mixins/chartjs';
+import routes from './routes';
+import theme from './theme';
 import client from './api/apollo-client';
-import { getAuth } from 'src/api/inMemoryAuth';
+import { getAuth } from './api/inMemoryAuth';
 
 const App = () => {
   const isLoggedIn = getAuth();

@@ -67,7 +67,7 @@ const TasksLearning = ({ className, ...rest }) => {
         </Grid>
         <Box mt={3}>
           <LinearProgress
-            value={15.5}
+            value={Math.round(dataCnt?.count * 100 / dataCnt?.totalCount)}
             variant="determinate"
           />
         </Box>

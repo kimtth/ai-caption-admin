@@ -5,9 +5,9 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { logout } from 'src/api/auth-client';
-import Logo from 'src/components/Logo';
-import { removeAuth } from 'src/api/inMemoryAuth';
+import { logout } from '../../api/auth-client';
+import Logo from '../../components/Logo';
+import { removeAuth } from '../../api/inMemoryAuth';
 
 const useStyles = makeStyles(() => ({
   root: {},

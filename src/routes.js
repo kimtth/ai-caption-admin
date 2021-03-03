@@ -1,19 +1,19 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import DashboardLayout from 'src/layouts/DashboardLayout';
-import MainLayout from 'src/layouts/MainLayout';
-import LoginView from 'src/views/auth/LoginView';
-import UserListView from 'src/views/user/UserListView';
-import ChannelListView from 'src/views/channel/ChannelListView';
-import MessageListView from 'src/views/message/MessageListView';
-import SpeechListView from 'src/views/custom_speech/SpeechListView';
-import NotFoundView from 'src/views/errors/NotFoundView';
-import DashboardView from 'src/views/reports/DashboardView';
-import SettingsView from 'src/views/settings/SettingsView';
+import DashboardLayout from './layouts/DashboardLayout';
+import MainLayout from './layouts/MainLayout';
+import LoginView from './views/auth/LoginView';
+import UserListView from './views/user/UserListView';
+import ChannelListView from './views/channel/ChannelListView';
+import MessageListView from './views/message/MessageListView';
+import SpeechListView from './views/custom_speech/SpeechListView';
+import NotFoundView from './views/errors/NotFoundView';
+import DashboardView from './views/reports/DashboardView';
+import SettingsView from './views/settings/SettingsView';
 
 const routes = (isLoggedIn) => [
   {
-    path: 'app',
+    path: '/app',
     element: isLoggedIn ? <DashboardLayout /> : <Navigate to="/login" />,
     children: [
       { path: 'user', element: <UserListView /> },

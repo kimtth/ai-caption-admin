@@ -34,6 +34,20 @@ app.use(jwtMiddleware);
 const static_pages = new Koa();
 static_pages.use(serve(__dirname + "/build")); //serve the build directory
 app.use(mount("/", static_pages));
+app.use(mount("/app/user", static_pages));
+app.use(mount("/app/channel", static_pages));
+app.use(mount("/app/message", static_pages));
+app.use(mount("/app/speech", static_pages));
+app.use(mount("/app/dashboard", static_pages));
+app.use(mount("/app/settings", static_pages));
+app.use(mount("/login", static_pages));
+app.use(mount("/404", static_pages));
+app.use(async (ctx, next) => {
+  await next();
+    if (ctx.status === 404) {
+      ctx.redirect('/404')
+    }
+});
 
 const router = new Router();
 router.use('/api', api.routes());

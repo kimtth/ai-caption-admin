@@ -2,10 +2,10 @@ import { Box, Button, Container, makeStyles, TextField, Typography } from '@mate
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { login } from 'src/api/auth-client';
-import { setAuth } from 'src/api/inMemoryAuth';
-import Page from 'src/components/Page';
-import { setUserId } from 'src/context/metaContext';
+import { login } from '../../api/auth-client';
+import { setAuth } from '../../api/inMemoryAuth';
+import Page from '../../components/Page';
+import { setUserId } from '../../context/metaContext';
 
 const useStyles = makeStyles((theme) => ({
   root: {

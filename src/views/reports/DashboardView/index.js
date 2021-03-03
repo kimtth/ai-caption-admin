@@ -1,6 +1,6 @@
 import { Container, Grid, makeStyles } from '@material-ui/core';
 import React from 'react';
-import Page from 'src/components/Page';
+import Page from '../../../components/Page';
 import Budget from './Budget';
 import Sales from './Traffics';
 import TasksProgress from './TasksLearning';
