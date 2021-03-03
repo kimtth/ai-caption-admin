@@ -80,7 +80,7 @@ const dialogResolvers = {
       let toDateBefore = 0;
       const today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
 
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 31; i++) {
         const fromDate = moment(today).subtract(fromDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
         const toDate = moment(today).subtract(toDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
         

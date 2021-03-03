@@ -10,6 +10,11 @@ const UserSchema = new Schema({
   }, //email
   username: String,
   password: String,
+  usertype: {
+    type: String,
+    enum : ['USER','ADMIN'],
+    default: 'USER'
+  },
   publishedDate: {
     type: Date,
     default: Date.now,

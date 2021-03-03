@@ -168,6 +168,12 @@ const resolvers = {
         user.password = updated_user.password;
       }
 
+      // Kim: While Updating, the publishedDate should be not changed.
+      const user_exist = await User.findOne({ userId: userId })
+      .catch(e => { throw new ApolloError(e, 'ERROR', {}) });;
+      const { publishedDate } = user_exist;
+      user.publishedDate = publishedDate; 
+
       const result = await User.findOneAndUpdate(
         { userId: userId },
         user,

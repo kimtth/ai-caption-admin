@@ -41,7 +41,9 @@ const Traffics = ({ className, ...rest }) => {
         label: 'Last month'
       }
     ],
-    labels: ['D-13', 'D-12', 'D-11', 'D-10', 'D-09', 'D-08', 'D-07', 'D-06', 'D-05', 'D-04', 'D-03', 'D-02', 'D-01', 'Today']
+    labels: Array.from({length: 31}, (x, i) => {
+      return i === 0? 'Today': `D-${i}`
+    }).reverse()
   };
 
   const options = {
@@ -110,7 +112,7 @@ const Traffics = ({ className, ...rest }) => {
             size="small"
             variant="text"
           >
-            Last 14 days
+            Last 30 days
           </Button>
         )}
         title="Latest Traffics (Count of message)"

@@ -25,6 +25,10 @@ exports.login = async (ctx) => {
       ctx.status = 401;
       return;
     }
+    if(user.usertype !== 'ADMIN'){
+      ctx.status = 401;
+      return;
+    }
     ctx.body = user.serialize();
     const token = user.generateToken();
     ctx.cookies.set('access_token', token, {
