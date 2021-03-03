@@ -28,10 +28,10 @@ const UsefulLink = ({ className, ...rest }) => {
             spacing={1}
           >
             <Grid item xs={3}>
-              <Typography variant="button">Azure Custom Speech</Typography>
+              <Typography variant="subtitle2">Azure Custom Speech</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Button component={Link} href="https://speech.microsoft.com/customspeech" target="_blank" variant="contained" color="primary">
+              <Button color="primary" component={Link} href="https://speech.microsoft.com/customspeech" target="_blank" variant="outlined">
                 {"Link to Azure Custom Speech"}
               </Button>
             </Grid>
@@ -39,7 +39,7 @@ const UsefulLink = ({ className, ...rest }) => {
               <Typography variant="button">テキスト→音声変換 (Text to MP3)</Typography>
             </Grid>
             <Grid item xs={9}>
-              <Button component={Link} href="https://note.cman.jp/other/voice/" target="_blank" variant="contained" color="primary">
+              <Button color="primary" component={Link} href="https://note.cman.jp/other/voice/" target="_blank" variant="outlined">
                 {"読み上げ（テキスト→音声変換）"}
               </Button>
             </Grid>

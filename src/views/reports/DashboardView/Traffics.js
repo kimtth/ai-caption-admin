@@ -13,14 +13,11 @@ const useStyles = makeStyles(() => ({
 const Traffics = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [dataCnt, setDataCnt] = useState({});
+  const [dataCnt, setDataCnt] = useState([]);
   const { loading, error, data: Count, refetch } = useQuery(trafficCountQuery, {
     fetchPolicy: "no-cache",
     onCompleted: () => {
       setDataCnt(Count?.trafficCnt);
-      const data = Count?.trafficCnt.map(item => {
-        return item.count
-      })
     }
   });
 
@@ -28,14 +25,14 @@ const Traffics = ({ className, ...rest }) => {
     datasets: [
       {
         backgroundColor: colors.indigo[500],
-        data: Count?.trafficCnt.map(item => {
+        data: dataCnt.map(item => {
           return item.count
         }).reverse(),
         label: 'This month'
       },
       {
         backgroundColor: colors.grey[200],
-        data: Count?.trafficCnt.map(item => {
+        data: dataCnt.map(item => {
           return item.lastMonthCnt
         }).reverse(),
         label: 'Last month'

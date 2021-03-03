@@ -31,7 +31,7 @@ const AudioRecord = ({ className, ...rest }) => {
   const data = {
     datasets: [
       {
-        data: [dataCnt?.count, dataCnt?.totalCount],
+        data: [dataCnt?.count, (dataCnt?.totalCount - dataCnt?.count)],
         backgroundColor: [
           colors.green[500],
           colors.red[600],
