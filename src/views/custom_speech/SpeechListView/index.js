@@ -20,6 +20,7 @@ const SpeechListView = () => {
   const classes = useStyles();
   const navigate = useNavigate();
   const [listData, setlistData] = useState([]);
+  const [dialogError, setDialogError] = useState('');
   const [selectedCustomIds, setSelectedCustomIds] = useState([]);
   const { loading, error, data, refetch } = useQuery(customQuery, {
     fetchPolicy: "no-cache",
@@ -28,11 +29,20 @@ const SpeechListView = () => {
     }
   });
 
+  if (dialogError) return `Error! ${dialogError}`;
+
   const loadData = () => {
     setlistData(data ? data.customs : []);
     // Kim: I could not find a reason why refreshing of page is not working when only calling a navigate one time.
     navigate('/app', { replace: true })
     navigate('/app/speech', { replace: true })
+  }
+
+  const handleReload = async() => {
+    const rtn = await refetch();
+    if (rtn) {
+      loadData();
+    }
   }
 
   return (
@@ -42,8 +52,10 @@ const SpeechListView = () => {
     >
       <Container maxWidth={false}>
         <Toolbar
+          callback={handleReload}
           customs={listData}
           selectedCustomIds={selectedCustomIds}
+          setDialogError={setDialogError}
         />
         <Box mt={3}>
           <Results

@@ -229,4 +229,16 @@ export const messageDeleteQuery = gql`
   }
 `;
 
+export const customDeleteQuery = gql`
+  mutation customDeleteQuery($ids: [ID]!) {
+    deleteCustoms(ids: $ids) {
+      id
+      type
+      refId
+      value
+      publishedDate
+    }
+  }
+`;
+
 /* eslint-disable */

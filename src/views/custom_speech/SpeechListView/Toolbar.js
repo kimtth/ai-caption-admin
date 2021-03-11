@@ -2,9 +2,7 @@ import { Box, Button, makeStyles } from '@material-ui/core';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import React from 'react';
-// import fs from 'fs';
-// const homeDir = require('os').homedir();
-// const desktopDir = `${homeDir}/Desktop`;
+import CustomDeleteDialog from '../../../dialog/customDeleteDialog';
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -13,11 +11,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Toolbar = ({ className, customs, selectedCustomIds, ...rest }) => {
+const Toolbar = ({ className, customs, selectedCustomIds, setDialogError, callback, ...rest }) => {
   const classes = useStyles();
+  const [deleteOpen, setDeleteOpen] = React.useState(false);
 
-  const handelExport = () => {
-
+  const handleExport = () => {
     if (window.confirm('Are you sure to download selected files?')) {
       selectedCustomIds.map((customId) => {
         console.log(customId);
@@ -53,11 +51,25 @@ const Toolbar = ({ className, customs, selectedCustomIds, ...rest }) => {
     }
   }
 
+  const handleClickDeleteOpen = (open) => {
+    if (selectedCustomIds?.length === 0) {
+      alert('please select an item.');
+    } else {
+      setDeleteOpen(open);
+    }
+  };
+
   return (
     <div
       className={clsx(classes.root, className)}
       {...rest}
     >
+      <CustomDeleteDialog
+        open={deleteOpen}
+        callback={callback}
+        setOpen={handleClickDeleteOpen}
+        selectedCustomIds={selectedCustomIds}
+      />
       <Box
         display="flex"
         justifyContent="flex-end"
@@ -66,9 +78,17 @@ const Toolbar = ({ className, customs, selectedCustomIds, ...rest }) => {
           color="primary"
           variant="contained"
           className={classes.basicButton}
-          onClick={handelExport}
+          onClick={handleExport}
         >
           Export
+        </Button>
+        <Button
+          color="primary"
+          variant="contained"
+          className={classes.basicButton}
+          onClick={() => handleClickDeleteOpen(true)}
+        >
+          Delete
         </Button>
       </Box>
     </div>

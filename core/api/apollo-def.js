@@ -238,6 +238,16 @@ const resolvers = {
       }).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
       return messages;
     },
+    deleteCustoms: async (parent, args, context, info) => {
+      if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
+      const { ids } = args
+      let customs = []
+      ids.forEach(async id => {
+        const custom = await Admin.findOneAndRemove({ id: id });
+        customs.push(custom)
+      }).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
+      return customs;
+    }
   }
 };
 

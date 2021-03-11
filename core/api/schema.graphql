@@ -93,4 +93,5 @@ type Mutation {
   deleteUsers(userIds: [ID]!): [User]
   deleteChannels(_ids: [ID]!): [Channel]
   deleteMessages(ids: [ID]!): [Message]
+  deleteCustoms(ids: [ID]!): [Custom]
 }
