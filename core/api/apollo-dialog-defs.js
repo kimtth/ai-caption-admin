@@ -76,16 +76,14 @@ const dialogResolvers = {
       if (!context.userId) return null;
 
       let CountDays = [];
-      let fromDateBefore = 1;
-      let toDateBefore = 0;
       const today = moment(new Date()).format('YYYY-MM-DD[T00:00:00.000Z]');
 
       for (let i = 0; i < 31; i++) {
-        const fromDate = moment(today).subtract(fromDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
-        const toDate = moment(today).subtract(toDateBefore, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
+        const fromDate = moment(today).subtract(i, 'days').format('YYYY-MM-DD[T00:00:00.000Z]');
+        const toDate = moment(today).subtract(i, 'days').format('YYYY-MM-DD[T23:59:59.000Z]');
         
         const lastMonthFromDate = moment(fromDate).subtract(1, 'months').format('YYYY-MM-DD[T00:00:00.000Z]');
-        const lastMonthToDate = moment(toDate).subtract(1, 'months').format('YYYY-MM-DD[T00:00:00.000Z]');
+        const lastMonthToDate = moment(toDate).subtract(1, 'months').format('YYYY-MM-DD[T23:59:59.000Z]');
         
         const cnt = await Message.countDocuments({
           publishedDate: {
@@ -106,9 +104,6 @@ const dialogResolvers = {
           lastMonthCnt: lastMonthCnt
         }
         CountDays.push(CountDay);
-
-        toDateBefore = fromDateBefore;
-        fromDateBefore += 1;
       }
 
       return CountDays;

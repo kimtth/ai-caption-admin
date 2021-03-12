@@ -90,9 +90,9 @@ const Results = ({ className, customs, selectedCustomIds, setSelectedCustomIds, 
                 <TableCell>
                   Value
                 </TableCell>
-                <TableCell>
+                {/* <TableCell>
                   Stream
-                </TableCell>
+                </TableCell> */}
                 <TableCell>
                   Published
                 </TableCell>
@@ -124,9 +124,9 @@ const Results = ({ className, customs, selectedCustomIds, setSelectedCustomIds, 
                   <TableCell>
                     {custom.value}
                   </TableCell>
-                  <TableCell>
+                  {/* <TableCell>
                     {custom.stream.slice(0, 50)}...
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
                     {moment(parseInt(custom.publishedDate, 10)).format('YYYY/MM/DD HH:MM:SS')}
                   </TableCell>
