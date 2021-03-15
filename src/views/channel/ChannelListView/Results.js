@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Results = ({ className, channels, selectedChannelIds, setSelectedChannelIds, ...rest }) => {
   const classes = useStyles();
-  const [limit, setLimit] = useState(100);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(100);
 
   const handleSelectAll = (event) => {
     let newSelectedChannelIds;
@@ -50,7 +50,7 @@ const Results = ({ className, channels, selectedChannelIds, setSelectedChannelId
   };
 
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setRowsPerPage(event.target.value);
   };
 
   const handlePageChange = (event, newPage) => {
@@ -96,7 +96,7 @@ const Results = ({ className, channels, selectedChannelIds, setSelectedChannelId
               </TableRow>
             </TableHead>
             <TableBody>
-              {channels.slice(0, limit).map((channel) => (
+              {channels.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((channel) => (
                 <TableRow
                   hover
                   key={channel.id}
@@ -136,7 +136,7 @@ const Results = ({ className, channels, selectedChannelIds, setSelectedChannelId
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
-        rowsPerPage={limit}
+        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[100, 300, 500]}
       />
     </Card>

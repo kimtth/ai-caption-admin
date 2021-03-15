@@ -5,6 +5,9 @@ const User = require('../models/user');
 const Channel = require('../models/channel');
 const Message = require('../models/message');
 const Admin = require('../models/admin');
+const { BlobServiceClient } = require('@azure/storage-blob');
+
+const blobServiceClient = BlobServiceClient.fromConnectionString(process.env.AZURE_STORAGE_CONNECTION_STRING);
 
 const typeDefs = gql(fs.readFileSync(`${__dirname}/schema.graphql`, {
   encoding: 'utf8'
@@ -170,9 +173,9 @@ const resolvers = {
 
       // Kim: While Updating, the publishedDate should be not changed.
       const user_exist = await User.findOne({ userId: userId })
-      .catch(e => { throw new ApolloError(e, 'ERROR', {}) });;
+        .catch(e => { throw new ApolloError(e, 'ERROR', {}) });;
       const { publishedDate } = user_exist;
-      user.publishedDate = publishedDate; 
+      user.publishedDate = publishedDate;
 
       const result = await User.findOneAndUpdate(
         { userId: userId },
@@ -211,9 +214,34 @@ const resolvers = {
       if (!context.userId) throw new ApolloError('Authentication required', 'ERROR', {});
       const { userIds } = args
       console.log(userIds)
+
       let users = []
       userIds.forEach(async userId => {
         const user = await User.findOneAndRemove({ userId: userId });
+        const channels = await Channel.find({ userId: userId });
+        channels.forEach(async channel => {
+          //Kim: channelId + userId => unique key
+          const ownerCheck = await Channel.find({ _id: channel._id });
+          if (ownerCheck.owner) {
+            const deletedChannels = await Channel.deleteMany({ id: channel.id });
+            const deletedMessages = await Message.deleteMany({ channelId: channel.id });
+
+            // delete files
+            const containerClient = blobServiceClient.getContainerClient(channel.id);
+            await containerClient.delete();
+          } else {
+            await Channel.findOneAndDelete({ _id: channel._id })
+          }
+        })
+
+        //delete my channel 
+        const MAIN_CH_CLASSIFIER = 'my-main'
+        const user_main = await User.findOne({ userId: userId });
+        const MAIN_CH_ID = `${user_main._id}-${MAIN_CH_CLASSIFIER}`;
+        const deletedMessages = await Message.deleteMany({ channelId: MAIN_CH_ID });
+        const containerClient = (MAIN_CH_ID);
+        await containerClient.delete();
+
         users.push(user);
       }).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
       return users;
@@ -224,6 +252,14 @@ const resolvers = {
       let channels = []
       _ids.forEach(async _id => {
         const channel = await Channel.findByIdAndRemove(_id);
+        if (channel.owner) {
+          const deletedChannels = await Channel.deleteMany({ id: channel.id });
+          const deletedMessages = await Message.deleteMany({ channelId: channel.id });
+
+          // delete files
+          const containerClient = blobServiceClient.getContainerClient(channel.id);
+          await containerClient.delete();
+        }
         channels.push(channel)
       }).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
       return channels;
@@ -234,6 +270,7 @@ const resolvers = {
       let messages = []
       ids.forEach(async id => {
         const message = await Message.findOneAndRemove({ id: id });
+        //Kim: The file is deleted when the related channel is dismissed.
         messages.push(message)
       }).catch(e => { throw new ApolloError(e, 'ERROR', {}) });
       return messages;

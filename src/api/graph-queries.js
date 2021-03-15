@@ -8,7 +8,6 @@ export const customQuery = gql`
       type
       refId
       value
-      stream
       publishedDate
     }
   }

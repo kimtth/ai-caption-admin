@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
 
 const Results = ({ className, users, selectedUserIds, setSelectedUserIds, ...rest }) => {
   const classes = useStyles();
-  const [limit, setLimit] = useState(100);
-  const [page, setPage] = useState(0);
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(100);
 
   const handleSelectAll = (event) => {
     let newSelectedUserIds;
@@ -50,7 +50,7 @@ const Results = ({ className, users, selectedUserIds, setSelectedUserIds, ...res
   };
 
   const handleLimitChange = (event) => {
-    setLimit(event.target.value);
+    setRowsPerPage(event.target.value);
   };
 
   const handlePageChange = (event, newPage) => {
@@ -93,7 +93,7 @@ const Results = ({ className, users, selectedUserIds, setSelectedUserIds, ...res
               </TableRow>
             </TableHead>
             <TableBody>
-              {users.slice(0, limit).map((user) => (
+              {users.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((user) => (
                 <TableRow
                   hover
                   key={user.userId}
@@ -130,7 +130,7 @@ const Results = ({ className, users, selectedUserIds, setSelectedUserIds, ...res
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
-        rowsPerPage={limit}
+        rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[100, 300, 500]}
       />
     </Card>
